@@ -61,6 +61,16 @@ import {
 } from 'core-app/features/work-packages/components/wp-query/url-params-helper';
 import { TurboRequestsService } from 'core-app/core/turbo/turbo-requests.service';
 
+// added imports for delete functionality in three dots menu
+// it also uses turboRequests which was already imported and injected
+import { WorkPackageViewSelectionService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
+import { WorkPackageContextMenuHelperService } from 'core-app/features/work-packages/components/wp-table/context-menu-helper/wp-context-menu-helper.service';
+import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
+import { StateService } from '@uirouter/core';
+import { WorkPackageResource } from 'core-app/features/hal/resources/work-package-resource';
+
+
 @Directive({
   selector: '[opSettingsContextMenu]',
   standalone: false,
@@ -77,6 +87,14 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
   readonly opStaticQueries = inject(StaticQueriesService);
   readonly turboRequests = inject(TurboRequestsService);
   readonly I18n = inject(I18nService);
+
+  // added injections for delete functionality in three dots menu
+  readonly wpTableSelection = inject(WorkPackageViewSelectionService);
+  readonly wpContextMenuHelper = inject(WorkPackageContextMenuHelperService);
+  readonly pathHelper = inject(PathHelperService);
+  readonly currentProject = inject(CurrentProjectService);
+  readonly $state = inject(StateService);
+
 
   @Input('opSettingsContextMenu-query') public query:QueryResource;
 
@@ -183,7 +201,16 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
     return this.opStaticQueries.getStaticName(query);
   }
 
+  private deleteSelectedWorkPackages(selected:WorkPackageResource[]) {
+    const ids = selected.map((wp) => wp.id).filter((id) => id !== null) as string[];
+    const baseRoute = this.$state.current.data?.baseRoute ?? this.$state.current.name;
+    const backUrl = this.$state.href(baseRoute as string) || this.pathHelper.workPackagesPath(this.currentProject.identifier ?? null);
+    void this.turboRequests.request(this.pathHelper.workPackagesBulkDeleteDialogPath(ids, backUrl), { method: 'GET' });
+  }
+
   private buildItems() {
+    const selectedWorkPackages = this.wpTableSelection.getSelectedWorkPackages();
+    const hasSelection = selectedWorkPackages.length > 0;
     this.items = [
       {
         // Configuration modal
@@ -285,16 +312,25 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
         },
       },
       {
-        // Delete query
-        disabled: this.authorisationService.cannot('query', 'delete'),
-        linkText: this.I18n.t('js.toolbar.settings.delete'),
+        // Modified delete functionality in three dots menu
+        disabled: hasSelection
+          ? !this.wpContextMenuHelper.getIntersectOfPermittedActions(selectedWorkPackages).some((a) => a.key === 'delete')
+          : this.authorisationService.cannot('query', 'delete'),
+        linkText: hasSelection
+          ? (selectedWorkPackages.length === 1
+            ? this.I18n.t('js.button_delete')
+            : this.I18n.t('js.work_packages.bulk_actions.delete'))
+          : this.I18n.t('js.toolbar.settings.delete'),
         icon: 'icon-delete',
         onClick: (event) => {
+          if (hasSelection) {
+            this.deleteSelectedWorkPackages(selectedWorkPackages);
+            return true;
+          }
           if (this.allowQueryAction(event, 'delete')
             && window.confirm(this.I18n.t('js.text_query_destroy_confirmation'))) {
             this.wpListService.delete();
           }
-
           return true;
         },
       },

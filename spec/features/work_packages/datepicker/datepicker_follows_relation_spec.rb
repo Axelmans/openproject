@@ -78,7 +78,6 @@ RSpec.describe "Datepicker logic on follow relationships", :js, with_settings: {
       let(:date_field) { work_packages_page.edit_field(:combinedDate) }
 
       it "keeps the minimum dates disabled" do
-        datepicker.expect_working_days_only true
         datepicker.expect_automatic_scheduling_mode
 
         datepicker.show_date "2024-02-01"
@@ -89,29 +88,6 @@ RSpec.describe "Datepicker logic on follow relationships", :js, with_settings: {
         datepicker.expect_not_disabled Date.parse("2024-02-05")
         datepicker.expect_not_disabled Date.parse("2024-02-06")
         datepicker.expect_not_disabled Date.parse("2024-02-07")
-
-        datepicker.toggle_working_days_only
-        datepicker.expect_working_days_only false
-
-        datepicker.expect_start_date "2024-02-03", disabled: true
-        datepicker.expect_due_date "2024-02-08" # did not change
-        datepicker.expect_disabled Date.parse("2024-02-01")
-        datepicker.expect_disabled Date.parse("2024-02-02") # predecessor's due date
-        datepicker.expect_not_disabled Date.parse("2024-02-03") # Saturday is non-working day but ignored
-        datepicker.expect_not_disabled Date.parse("2024-02-04") # Sunday is non-working day but ignored
-        datepicker.expect_not_disabled Date.parse("2024-02-05")
-        datepicker.expect_not_disabled Date.parse("2024-02-06")
-        datepicker.expect_not_disabled Date.parse("2024-02-07")
-
-        datepicker.toggle_working_days_only
-        datepicker.expect_working_days_only true
-
-        datepicker.expect_start_date "2024-02-05", disabled: true
-        datepicker.expect_due_date "2024-02-08"
-        datepicker.expect_disabled Date.parse("2024-02-02") # predecessor's due date
-        datepicker.expect_disabled Date.parse("2024-02-03") # Saturday is non-working day
-        datepicker.expect_disabled Date.parse("2024-02-04") # Sunday is non-working day
-        datepicker.expect_not_disabled Date.parse("2024-02-05")
       end
     end
 
@@ -128,18 +104,9 @@ RSpec.describe "Datepicker logic on follow relationships", :js, with_settings: {
       let(:date_field) { work_packages_page.edit_field(:date) }
 
       it "disables the whole date picker" do
-        datepicker.expect_working_days_only true
         datepicker.expect_automatic_scheduling_mode
 
         datepicker.show_date "2024-02-02"
-        1.upto(29) do |day|
-          datepicker.expect_disabled Date.parse("2024-02-%02d" % day)
-        end
-
-        datepicker.toggle_working_days_only
-        datepicker.expect_working_days_only false
-
-        datepicker.expect_start_date "2024-02-03", disabled: true
         1.upto(29) do |day|
           datepicker.expect_disabled Date.parse("2024-02-%02d" % day)
         end
@@ -167,7 +134,6 @@ RSpec.describe "Datepicker logic on follow relationships", :js, with_settings: {
         datepicker.expect_start_date("", disabled: true)
         datepicker.expect_due_date("", disabled: false)
         datepicker.expect_duration("", disabled: false)
-        datepicker.expect_working_days_only true
         datepicker.expect_automatic_scheduling_mode
 
         datepicker.show_date "2024-02-01"

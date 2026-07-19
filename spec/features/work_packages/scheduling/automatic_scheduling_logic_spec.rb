@@ -105,12 +105,10 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
       it "cannot change scheduling mode to automatic" do
         open_date_picker
         datepicker.expect_manual_scheduling_mode
-        datepicker.expect_working_days_only_checkbox_visible
 
         datepicker.toggle_scheduling_mode
         datepicker.expect_automatic_scheduling_mode
 
-        datepicker.expect_no_working_days_only_checkbox_visible
         datepicker.expect_save_button_disabled
       end
     end
@@ -239,8 +237,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-16", disabled: true
         datepicker.expect_due_date "2025-01-24", disabled: true
         datepicker.expect_duration "7", disabled: true
-        datepicker.expect_working_days_only_disabled
-        datepicker.expect_working_days_only true
         datepicker.expect_banner_text I18n.t("work_packages.datepicker_modal.banner.title.automatic_with_children")
       end
     end
@@ -268,8 +264,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-16", disabled: true
         datepicker.expect_due_date "2025-01-26", disabled: true
         datepicker.expect_duration "11", disabled: true
-        datepicker.expect_working_days_only_disabled
-        datepicker.expect_working_days_only false
         datepicker.expect_banner_text I18n.t("work_packages.datepicker_modal.banner.title.automatic_with_children")
       end
     end
@@ -298,8 +292,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-16", disabled: true
         datepicker.expect_due_date "2025-01-26", disabled: true
         datepicker.expect_duration "11", disabled: true
-        datepicker.expect_working_days_only_disabled
-        datepicker.expect_working_days_only false
         datepicker.expect_banner_text I18n.t("work_packages.datepicker_modal.banner.title.automatic_with_children")
       end
     end
@@ -329,8 +321,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-15", disabled: true
         datepicker.expect_due_date "2025-01-22", disabled: false
         datepicker.expect_duration "6"
-        datepicker.expect_working_days_only_enabled
-        datepicker.expect_working_days_only true
         datepicker.expect_banner_text I18n.t("work_packages.datepicker_modal.banner.title.automatic_with_predecessor")
       end
     end
@@ -350,8 +340,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-15", disabled: true
         datepicker.expect_due_date "2025-01-19", disabled: false
         datepicker.expect_duration "5"
-        datepicker.expect_working_days_only_enabled
-        datepicker.expect_working_days_only false
         datepicker.expect_banner_text I18n.t("work_packages.datepicker_modal.banner.title.automatic_with_predecessor")
       end
     end
@@ -377,8 +365,6 @@ RSpec.describe "Automatic scheduling logic test cases (WP #61054)", :js, with_se
         datepicker.expect_start_date "2025-01-27"
         datepicker.expect_due_date "2025-02-06"
         datepicker.expect_duration "11"
-        datepicker.expect_working_days_only_enabled
-        datepicker.expect_working_days_only false
 
         apply_and_expect_saved(
           start_date: Date.parse("2025-01-27"),

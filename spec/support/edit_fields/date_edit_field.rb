@@ -34,7 +34,6 @@ class DateEditField < EditField
            :expect_duration,
            :set_duration,
            :duration_field,
-           :toggle_working_days_only,
            :toggle_scheduling_mode,
            :expect_manual_scheduling_mode,
            :expect_automatic_scheduling_mode,

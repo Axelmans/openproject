@@ -53,7 +53,6 @@ RSpec.describe "New work package datepicker",
 
   it "can open and select the datepicker" do
     date_field.input_element.click
-    date_field.toggle_working_days_only
 
     start = (Time.zone.today - 1.day).iso8601
     wait_for_network_idle

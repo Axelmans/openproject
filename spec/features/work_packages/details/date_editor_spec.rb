@@ -477,34 +477,6 @@ RSpec.describe "date inplace editor", :js, :selenium, with_settings: { date_form
                  due_date: Date.parse("2022-09-29"))
         end
 
-        it "allows switching to manual scheduling to set the ignore NWD (Regression #43933)" do
-          expect(page).to have_css(test_selector("op-modal-banner-info").to_s,
-                                   text: "The dates are determined by child work packages.\nClick on \"Show relations\" for Gantt overview.")
-
-          # Expect "Working days only" to be checked
-          datepicker.expect_working_days_only_disabled
-          datepicker.expect_working_days_only true
-
-          # When switching to manually scheduled, "working days only" can be changed
-          datepicker.click_manual_scheduling_mode
-          expect(page).to have_css(test_selector("op-modal-banner-warning").to_s,
-                                   text: "Manually scheduled. Dates not affected by relations.\nThis has child work packages but their start dates are ignored.")
-
-          datepicker.expect_working_days_only_enabled
-          datepicker.expect_working_days_only true
-
-          datepicker.toggle_working_days_only
-          datepicker.wait_for_preview_update
-          datepicker.expect_working_days_only false
-
-          # Reset "working days only" when switching back to automatic scheduling
-          datepicker.click_automatic_scheduling_mode
-          datepicker.expect_working_days_only_disabled
-          datepicker.expect_working_days_only true
-
-          expect(page).to have_css(test_selector("op-modal-banner-info").to_s,
-                                   text: "The dates are determined by child work packages.\nClick on \"Show relations\" for Gantt overview.")
-        end
       end
     end
   end

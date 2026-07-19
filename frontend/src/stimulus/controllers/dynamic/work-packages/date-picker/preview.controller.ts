@@ -313,11 +313,6 @@ export default class PreviewController extends DialogPreviewController {
     this.keepFieldValue();
   }
 
-  setIgnoreNonWorkingDays(event:{ target:HTMLInputElement }) {
-    this.currentIgnoreNonWorkingDays = !event.target.checked;
-    this.updateFlatpickrCalendar();
-  }
-
   afterRendering(params:{ shouldFocusBanner?:boolean }) {
     if (params.shouldFocusBanner) {
       this.focusOnOpen();

@@ -126,42 +126,6 @@ RSpec.describe "Datepicker: Finish date field in auto-scheduled mode logic test 
     end
   end
 
-  describe "when changing finish date and non-working days (scenario 4)" do
-    it "keeps the finish date and calculates the duration" do
-      datepicker.set_date "2025-04-23"
-
-      datepicker.expect_working_days_only(true)
-      datepicker.expect_start_date "2025-04-08", disabled: true
-      datepicker.expect_due_date "2025-04-23", disabled: false
-      datepicker.expect_duration "12"
-
-      datepicker.toggle_working_days_only
-
-      datepicker.expect_working_days_only(false)
-      datepicker.expect_start_date "2025-04-08", disabled: true
-      datepicker.expect_due_date "2025-04-23", disabled: false
-      datepicker.expect_duration "16"
-    end
-  end
-
-  describe "when changing duration date and non-working days (scenario 5)" do
-    it "keeps the duration and calculates the finish date" do
-      datepicker.set_duration "14"
-
-      datepicker.expect_working_days_only(true)
-      datepicker.expect_start_date "2025-04-08", disabled: true
-      datepicker.expect_due_date "2025-04-25", disabled: false
-      datepicker.expect_duration "14"
-
-      datepicker.toggle_working_days_only
-
-      datepicker.expect_working_days_only(false)
-      datepicker.expect_start_date "2025-04-08", disabled: true
-      datepicker.expect_due_date "2025-04-21", disabled: false
-      datepicker.expect_duration "14"
-    end
-  end
-
   describe "when launching date-picker with duration but change finish date (scenario 6)" do
     let(:duration) { wp_table.edit_field(work_package, :duration) }
 
@@ -353,56 +317,5 @@ RSpec.describe "Datepicker: Finish date field in auto-scheduled mode logic test 
       end
     end
 
-    describe "and change duration and non-working days, switching back to automatic (scenario 14a)" do
-      it "preserves the duration date" do
-        datepicker.set_duration "14"
-
-        datepicker.expect_working_days_only(true)
-        datepicker.expect_start_date "2025-04-08", disabled: false
-        datepicker.expect_due_date "2025-04-25", disabled: false
-        datepicker.expect_duration "14"
-
-        datepicker.toggle_working_days_only
-
-        datepicker.expect_working_days_only(false)
-        datepicker.expect_start_date "2025-04-08", disabled: false
-        datepicker.expect_due_date "2025-04-21", disabled: false
-        datepicker.expect_duration "14"
-
-        datepicker.click_automatic_scheduling_mode
-
-        datepicker.expect_automatic_scheduling_mode
-        datepicker.expect_working_days_only(false)
-        datepicker.expect_start_date "2025-04-08", disabled: true
-        datepicker.expect_due_date "2025-04-21", disabled: false
-        datepicker.expect_duration "14"
-      end
-    end
-
-    describe "and change finish and non-working days, switching back to automatic (scenario 14b)" do
-      it "preserves the finish date" do
-        datepicker.set_date "2025-04-25"
-
-        datepicker.expect_working_days_only(true)
-        datepicker.expect_start_date "2025-04-08", disabled: false
-        datepicker.expect_due_date "2025-04-25", disabled: false
-        datepicker.expect_duration "14"
-
-        datepicker.toggle_working_days_only
-
-        datepicker.expect_working_days_only(false)
-        datepicker.expect_start_date "2025-04-08", disabled: false
-        datepicker.expect_due_date "2025-04-25", disabled: false
-        datepicker.expect_duration "18"
-
-        datepicker.click_automatic_scheduling_mode
-
-        datepicker.expect_automatic_scheduling_mode
-        datepicker.expect_working_days_only(false)
-        datepicker.expect_start_date "2025-04-08", disabled: true
-        datepicker.expect_due_date "2025-04-25", disabled: false
-        datepicker.expect_duration "18"
-      end
-    end
   end
 end

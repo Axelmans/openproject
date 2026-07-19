@@ -44,27 +44,6 @@
               end
             end
           end
-
-          if show_date_form
-            first_row.with_column(mb: 1) do
-              render(
-                Primer::Alpha::CheckBox.new(
-                  name: "work_package[ignore_non_working_days]",
-                  id: "work_package_ignore_non_working_days",
-                  label: I18n.t("work_packages.datepicker_modal.ignore_non_working_days.title"),
-                  checked: !work_package.ignore_non_working_days,
-                  disabled: disabled_checkbox?,
-                  test_selector: "op-datepicker-modal--ignore-non-working-days",
-                  value: 0,
-                  unchecked_value: 1,
-                  data: { "work-packages--date-picker--preview-target": "fieldInput",
-                          action: "work-packages--date-picker--preview#markFieldAsTouched " \
-                                  "work-packages--date-picker--preview#inputChanged " \
-                                  "work-packages--date-picker--preview#setIgnoreNonWorkingDays" }
-                )
-              )
-            end
-          end
         end
       end
 

@@ -93,10 +93,6 @@ module WorkPackages
           params[:field] == "date" ||
           (params[:work_package].present? && params[:work_package][:duration].nil?)
       end
-
-      def disabled_checkbox?
-        !schedule_manually && work_package.children.any?
-      end
     end
   end
 end
