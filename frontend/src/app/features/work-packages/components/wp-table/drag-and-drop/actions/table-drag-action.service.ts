@@ -58,4 +58,11 @@ export class TableDragActionService {
     }
     return true;
   }
+
+  /**
+   * Added for functionality that prevents the manual force to manual sorting when drag-and-dropping.
+   */
+  public get requiresManualSorting(): boolean {
+    return true;
+  }
 }

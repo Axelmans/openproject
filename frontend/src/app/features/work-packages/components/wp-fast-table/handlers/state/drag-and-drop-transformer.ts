@@ -101,9 +101,12 @@ export class DragAndDropTransformer {
           this.updateRenderedOrder(newOrder);
           this.actionService.onNewOrder(newOrder);
 
-          // Save the query when switching to manual
+          // Added for functionality that prevents the manual force to manual sorting when drag-and-dropping. 
+          // Only switch to manual sorting when the drop represents a genuine manual
+          // reorder — not when it only changed a parent/hierarchy relation or a
+          // grouped attribute value.
           const query = this.querySpace.query.value;
-          if (query && this.wpTableSortBy.switchToManualSorting(query)) {
+          if (query && this.actionService.requiresManualSorting && this.wpTableSortBy.switchToManualSorting(query)) {
             await this.wpListService.createOrSave(query);
           }
         } catch (e) {

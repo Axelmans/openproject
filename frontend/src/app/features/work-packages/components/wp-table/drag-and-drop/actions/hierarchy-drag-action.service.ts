@@ -119,4 +119,11 @@ export class HierarchyDragActionService extends TableDragActionService {
       .toPromise()
       .then((wp:WorkPackageResource) => Promise.resolve(wp.parent?.id || null));
   }
+
+  /**
+   * Added for functionality that prevents the manual force to manual sorting when drag-and-dropping. 
+   */
+  public get requiresManualSorting():boolean {
+    return false;
+  }
 }

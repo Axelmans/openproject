@@ -101,26 +101,18 @@ RSpec.describe "Manual sorting of WP table", :js, :selenium do
       hierarchies.expect_leaf_at(work_package4)
     end
 
-    it "maintains the order and automatically saves the query" do
+    # Added for functionality that prevents the manual force to manual sorting when drag-and-dropping. 
+    it "changes the parent without switching the query to manual sorting" do
       wp_table.drag_and_drop_work_package from: 3, to: 1
       loading_indicator_saveguard
       hierarchies.expect_hierarchy_at(work_package1, work_package2)
       hierarchies.expect_leaf_at(work_package4, work_package3)
 
-      wp_table.expect_and_dismiss_toaster message: "Successful creation."
+      # The parent change is saved directly on the work package, not via the query
+      wp_table.expect_and_dismiss_toaster message: "Successful update."
 
-      query = nil
-      retry_block do
-        query = Query.last
-        raise "Query was not yet saved." unless query.name == "New manually sorted query"
-      end
-
-      # Expect sorted 1 and 2, the rest is not positioned
-      expect_query_order(query, [work_package1, work_package4].map(&:id))
-
-      # Pagination information is shown but no per page options
-      pagination.expect_range(1, 4, 4)
-      pagination.expect_no_per_page_options
+      # No new query should have been created just because of the drag
+      expect(Query.count).to eq(0)
     end
 
     it "can drag an element into a hierarchy" do
