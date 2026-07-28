@@ -1,21 +1,40 @@
 import { QueryResource } from 'core-app/features/hal/resources/query-resource';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { WorkPackageViewHierarchies } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-table-hierarchies';
 import { WorkPackageQueryStateService } from './wp-view-base.service';
+import { WorkPackageCollectionResource } from 'core-app/features/hal/resources/wp-collection-resource';
+import { ConfigurationService } from 'core-app/core/config/configuration.service';
 
 @Injectable()
 export class WorkPackageViewHierarchiesService extends WorkPackageQueryStateService<WorkPackageViewHierarchies> {
-  public valueFromQuery(query:QueryResource):WorkPackageViewHierarchies {
+  private readonly configurationService = inject(ConfigurationService);
+  
+  public valueFromQuery(query:QueryResource, results:WorkPackageCollectionResource):WorkPackageViewHierarchies {
     const value = new WorkPackageViewHierarchies(query.showHierarchies);
-    const { current } = this;
+    // Altered to allow user to set automatic collapse of hierarchy on load
+    const previousState = this.lastUpdatedState.value;
 
-    // Take over current collapsed values
-    // which are not yet saved
-    if (current) {
-      value.collapsed = current.collapsed;
+    if (previousState) {
+      value.collapsed = previousState.collapsed;
+    }
+
+    else if (query.showHierarchies && this.configurationService.collapseHierarchyOnLoad()) {
+      value.collapsed = this.collapseAllParents(results);
     }
 
     return value;
+  }
+
+  private collapseAllParents(results:WorkPackageCollectionResource):Record<string, boolean> {
+    const collapsed:Record<string, boolean> = {};
+
+    results.elements.forEach((wp) => {
+      wp.getAncestors().forEach((ancestor) => {
+        collapsed[ancestor.id as string] = true;
+      });
+    });
+
+    return collapsed;
   }
 
   public hasChanged(query:QueryResource) {

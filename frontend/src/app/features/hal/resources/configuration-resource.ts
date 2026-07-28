@@ -34,6 +34,8 @@ export interface ConfigurationUserPreferences {
   commentSortDescending:boolean;
   disableKeyboardShortcuts:boolean;
   warnOnLeavingUnsaved:boolean;
+  // Added to allow user to set automatic collapse of hierarchy on load
+  collapseHierarchyOnLoad:boolean;
   autoHidePopups:boolean;
 }
 

@@ -137,6 +137,11 @@ lefthook-local.yml
 AGENTS.local.md
 CLAUDE.local.md
 
+# Claude Code project instructions and local settings (kept locally, not tracked in this fork)
+CLAUDE.md
+**/CLAUDE.md
+.claude/
+
 /.lefthook-local/
 
 frontend/package-lock.json

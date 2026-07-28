@@ -392,6 +392,9 @@ en:
         button_update_alerts: "Update alerts"
         button_update_look_and_feel: "Update look and feel"
         button_update_user_information: "Update profile"
+        # Added to allow user to set automatic collapse of hierarchy on load
+        collapse_hierarchy_on_load: "Collapse hierarchy on load"
+        collapse_hierarchy_on_load_caption: "When enabled, all parent work packages are automatically collapsed the first time a work packages table is opened."
         comments_sorting: "Display work package activity sorted by"
         daily_reminders: "Daily reminders"
         disable_keyboard_shortcuts: "Disable keyboard shortcuts"

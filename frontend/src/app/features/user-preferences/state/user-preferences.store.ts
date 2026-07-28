@@ -52,6 +52,8 @@ function createInitialState():IUserPreference {
     pauseReminders: {
       enabled: false,
     },
+    // Added to allow user to set automatic collapse of hierarchy on load
+    collapseHierarchyOnLoad: false
   };
 }
 

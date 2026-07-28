@@ -25,4 +25,6 @@ export interface IUserPreference {
   dailyReminders:DailyRemindersSettings;
   immediateReminders:ImmediateRemindersSettings;
   pauseReminders:Partial<PauseRemindersSettings>;
+  // Added to allow user to set automatic collapse of hierarchy on load
+  collapseHierarchyOnLoad:boolean;
 }

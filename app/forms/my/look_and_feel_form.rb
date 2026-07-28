@@ -77,6 +77,11 @@ class My::LookAndFeelForm < ApplicationForm
                    label: attribute_name(:disable_keyboard_shortcuts),
                    caption: disable_keyboard_shortcuts_caption
 
+      # Added to allow user to set automatic collapse of hierarchy on load
+      fg.check_box name: :collapse_hierarchy_on_load,
+             label: attribute_name(:collapse_hierarchy_on_load),
+             caption: attribute_name(:collapse_hierarchy_on_load_caption)
+
       fg.submit(name: :submit,
                 label: attribute_name(:button_update_look_and_feel),
                 scheme: :default)

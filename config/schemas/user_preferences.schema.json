@@ -28,6 +28,9 @@
                 "warn_on_leaving_unsaved": {
                     "type": "boolean"
                 },
+                "collapse_hierarchy_on_load": {
+                  "type": "boolean"
+                },
                 "comments_sorting": {
                     "type": "string",
                     "enum": ["asc", "desc"]

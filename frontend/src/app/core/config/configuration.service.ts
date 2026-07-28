@@ -59,6 +59,11 @@ export class ConfigurationService {
     return this.configuration.userPreferences.warnOnLeavingUnsaved;
   }
 
+  // Added to allow user to set automatic collapse of hierarchy on load
+  public collapseHierarchyOnLoad():boolean {
+    return this.configuration.userPreferences.collapseHierarchyOnLoad;
+  }
+
   public autoHidePopups():boolean {
     return this.configuration.userPreferences.autoHidePopups;
   }

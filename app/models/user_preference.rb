@@ -119,11 +119,22 @@ class UserPreference < ApplicationRecord
     settings[:warn_on_leaving_unsaved] = to_boolean(value)
   end
 
+  # Added to allow user to set automatic collapse of hierarchy on load
+  def collapse_hierarchy_on_load?
+    settings.fetch(:collapse_hierarchy_on_load, false)
+  end
+
+  def collapse_hierarchy_on_load=(value)
+    settings[:collapse_hierarchy_on_load] = to_boolean(value)
+  end
+
   # Provide an alias to form builders
   alias :comments_in_reverse_order :comments_in_reverse_order?
   alias :warn_on_leaving_unsaved :warn_on_leaving_unsaved?
   alias :auto_hide_popups :auto_hide_popups?
   alias :disable_keyboard_shortcuts :disable_keyboard_shortcuts?
+  # Added to allow user to set automatic collapse of hierarchy on load
+  alias :collapse_hierarchy_on_load :collapse_hierarchy_on_load?
 
   def comments_in_reverse_order=(value)
     settings[:comments_sorting] = to_boolean(value) ? "desc" : "asc"

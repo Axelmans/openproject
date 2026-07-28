@@ -194,6 +194,7 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     set_default_status
     set_default_start_date(attributes)
     set_default_due_date(attributes)
+    set_default_version
   end
 
   def non_or_default_description?
@@ -210,6 +211,18 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
 
   def set_default_priority
     work_package.priority ||= IssuePriority.active.default
+  end
+
+  # Added to auto-assign parent version when creating a subtask.
+  def set_default_version
+    return if work_package.version.present? || work_package.target_version_ids.present?
+
+    parent_version = work_package.parent&.version
+    return unless parent_version
+
+    work_package.version = parent_version
+    work_package.target_version_ids_replacements = [parent_version.id] if work_package.target_version_ids_replacements.blank?
+    work_package.target_version_ids = [parent_version.id]
   end
 
   def set_default_start_date(attributes)
