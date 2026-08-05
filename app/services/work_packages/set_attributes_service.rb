@@ -69,8 +69,15 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     target_ids = attributes.delete(:target_version_ids)
     observed_in_ids = attributes.delete(:observed_in_version_ids)
 
-    model.target_version_ids_replacements = Array(target_ids).map(&:to_i) if target_ids
-    model.observed_in_version_ids_replacements = Array(observed_in_ids).map(&:to_i) if observed_in_ids
+    if target_ids
+      model.target_version_ids_replacements = Array(target_ids).map(&:to_i)
+      model.target_version_ids = model.target_version_ids_replacements if model.new_record?
+    end
+
+    if observed_in_ids
+      model.observed_in_version_ids_replacements = Array(observed_in_ids).map(&:to_i)
+      model.observed_in_version_ids = model.observed_in_version_ids_replacements if model.new_record?
+    end
   end
 
   def set_static_attributes(attributes)
@@ -189,6 +196,7 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
   end
 
   def set_default_attributes(attributes)
+    set_default_project
     set_default_priority
     set_default_author
     set_default_status
@@ -241,6 +249,16 @@ class WorkPackages::SetAttributesService < BaseServices::SetAttributes
     work_package.due_date ||= if parent_due_later_than_start?
                                 work_package.parent.due_date
                               end
+  end
+
+  # Added to auto-assign parent project when creating a subtask
+  def set_default_project
+    return if work_package.project.present?
+
+    parent_project = work_package.parent&.project
+    return unless parent_project
+
+    work_package.project = parent_project
   end
 
   def set_templated_description

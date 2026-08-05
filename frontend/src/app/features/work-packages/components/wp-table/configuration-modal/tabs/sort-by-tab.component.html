@@ -38,7 +38,7 @@
         <div class="form--field -full-width">
           <label
             for="modal-sorting-attribute-{{index}}"
-            [textContent]="text['sort_criteria_' + index]"
+            [textContent]="sortCriteriaLabel(index)"
             class="form--label sr-only">
           </label>
           <div class="form--field-container">
@@ -80,6 +80,17 @@
             }
           </div>
         </div>
+      </div>
+    }
+    <!-- Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row -->
+    @if (availableColumns.length > 0) {
+      <div class="form--row">
+        <button type="button"
+          class="button sort-by--add-criterion"
+          (click)="addSortCriterion()">
+          <op-icon icon-classes="icon-add icon4" />
+          {{ text.add_criterion }}
+        </button>
       </div>
     }
   }

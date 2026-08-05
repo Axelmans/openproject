@@ -395,6 +395,9 @@ en:
         # Added to allow user to set automatic collapse of hierarchy on load
         collapse_hierarchy_on_load: "Collapse hierarchy on load"
         collapse_hierarchy_on_load_caption: "When enabled, all parent work packages are automatically collapsed the first time a work packages table is opened."
+        # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+        open_details_on_id_click: "Open detail view when clicking a work package ID"
+        open_details_on_id_click_caption: "When enabled, clicking a work package's ID in a table opens the split-screen detail view instead of navigating to the full work package page."
         comments_sorting: "Display work package activity sorted by"
         daily_reminders: "Daily reminders"
         disable_keyboard_shortcuts: "Disable keyboard shortcuts"

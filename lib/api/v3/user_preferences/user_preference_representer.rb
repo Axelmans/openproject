@@ -61,6 +61,8 @@ module API
         property :warn_on_leaving_unsaved
         # Added to allow user to set automatic collapse of hierarchy on load
         property :collapse_hierarchy_on_load
+        # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+        property :open_details_on_id_click
         property :comments_in_reverse_order,
                  as: :commentSortDescending
         property :auto_hide_popups

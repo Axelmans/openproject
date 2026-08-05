@@ -99,8 +99,8 @@ export class WorkPackageViewSortByService extends WorkPackageQueryStateService<Q
   }
 
   public add(sortBy:QuerySortByResource) {
-    const newValue = uniqBy([sortBy, ...this.current], (item) => item.column.href)
-      .slice(0, 3);
+    // Added to allow sorting by an unlimited number of columns (previously capped via .slice(0, 3))
+    const newValue = uniqBy([sortBy, ...this.current], (item) => item.column.href);
 
     this.update(newValue);
   }

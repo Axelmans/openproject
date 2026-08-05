@@ -39,9 +39,8 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
   public text = {
     title: this.I18n.t('js.label_sort_by'),
     placeholder: this.I18n.t('js.placeholders.default'),
-    sort_criteria_1: this.I18n.t('js.filter.sorting.criteria.one'),
-    sort_criteria_2: this.I18n.t('js.filter.sorting.criteria.two'),
-    sort_criteria_3: this.I18n.t('js.filter.sorting.criteria.three'),
+    // Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row
+    add_criterion: this.I18n.t('js.filter.sorting.criteria.add'),
     sorting_mode: {
       description: this.I18n.t('js.work_packages.table_configuration.sorting_mode.description'),
       automatic: this.I18n.t('js.work_packages.table_configuration.sorting_mode.automatic'),
@@ -108,14 +107,29 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
         });
 
         this.updateUsedColumns();
-        this.fillUpSortElements();
         this.cdRef.markForCheck();
       });
   }
 
+  // Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row
+  public addSortCriterion() {
+    this.sortationObjects.push(new SortModalObject(this.emptyColumn, QUERY_SORT_BY_ASC));
+  }
+
   public updateSelection(sort:SortModalObject, selected:string | null) {
-    sort.column = this.allColumns.find((column) => column.href === selected) ?? this.emptyColumn;
+    const column = this.allColumns.find((c) => c.href === selected) ?? this.emptyColumn;
+    // Added to remove the row entirely when it's reset back to the placeholder, instead of leaving an empty row behind
+    if (column === this.emptyColumn) {
+      this.sortationObjects = this.sortationObjects.filter((object) => object !== sort);
+    } else {
+      sort.column = column;
+    }
     this.updateUsedColumns();
+  }
+
+  // Added to allow sorting by an unlimited number of columns instead of a fixed row count
+  public sortCriteriaLabel(index:number):string {
+    return this.I18n.t('js.filter.sorting.criteria.nth', { position: index + 1 });
   }
 
   public updateUsedColumns() {
@@ -132,12 +146,6 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
 
   private getMatchingSort(column:string, direction:string) {
     return this.wpTableSortBy.available.find((sort) => sort.column.href === column && sort.direction.href === direction);
-  }
-
-  private fillUpSortElements() {
-    while (this.sortationObjects.length < 3) {
-      this.sortationObjects.push(new SortModalObject(this.emptyColumn, QUERY_SORT_BY_ASC));
-    }
   }
 
   private getManualSortingOption() {

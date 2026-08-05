@@ -326,7 +326,8 @@ class Query < ApplicationRecord
     if arg.is_a?(Hash)
       arg = arg.keys.sort.map { |k| arg[k] }
     end
-    c = arg.reject { |k, _o| k.to_s.blank? }.slice(0, 3).map { |k, o| [k.to_s, o == "desc" ? o : "asc"] }
+    # Added to allow sorting by an unlimited number of columns (previously capped at 3 via .slice(0, 3))
+    c = arg.reject { |k, _o| k.to_s.blank? }.map { |k, o| [k.to_s, o == "desc" ? o : "asc"] }
     write_attribute(:sort_criteria, c)
   end
 

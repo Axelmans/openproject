@@ -36,6 +36,8 @@ export interface ConfigurationUserPreferences {
   warnOnLeavingUnsaved:boolean;
   // Added to allow user to set automatic collapse of hierarchy on load
   collapseHierarchyOnLoad:boolean;
+  // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+  openDetailsOnIdClick: boolean
   autoHidePopups:boolean;
 }
 

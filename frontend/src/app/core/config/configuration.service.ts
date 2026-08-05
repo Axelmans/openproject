@@ -64,6 +64,12 @@ export class ConfigurationService {
     return this.configuration.userPreferences.collapseHierarchyOnLoad;
   }
 
+  // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+  public openDetailsOnIdClick():boolean {
+    return this.configuration.userPreferences.openDetailsOnIdClick
+  }
+
+
   public autoHidePopups():boolean {
     return this.configuration.userPreferences.autoHidePopups;
   }

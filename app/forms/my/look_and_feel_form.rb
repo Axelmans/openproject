@@ -82,6 +82,11 @@ class My::LookAndFeelForm < ApplicationForm
              label: attribute_name(:collapse_hierarchy_on_load),
              caption: attribute_name(:collapse_hierarchy_on_load_caption)
 
+      # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+      fg.check_box name: :open_details_on_id_click,
+             label: attribute_name(:open_details_on_id_click),
+             caption: attribute_name(:open_details_on_id_click_caption)
+
       fg.submit(name: :submit,
                 label: attribute_name(:button_update_look_and_feel),
                 scheme: :default)

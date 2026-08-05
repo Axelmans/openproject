@@ -718,6 +718,15 @@ RSpec.describe Query,
         end
       end
 
+      # Added to allow sorting by an unlimited number of columns (previously capped at 3)
+      context "with more than 3 criteria" do
+        let(:sort_by) { [["project", "desc"], ["start_date", "asc"], ["subject", "desc"], ["id", "asc"]] }
+
+        it "keeps all of them instead of being capped at 3" do
+          expect(query.sort_criteria).to eql sort_by
+        end
+      end
+
       context "parent" do
         let(:sort_by) { [["parent", "asc"], ["start_date", "asc"]] }
 

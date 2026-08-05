@@ -318,9 +318,8 @@ en:
       noneElement: "(none)"
       sorting:
         criteria:
-          one: "First sorting criteria"
-          three: "Third sorting criteria"
-          two: "Second sorting criteria"
+          add: "Add sort criterion"
+          nth: "Sorting criteria %{position}"
       time_zone_converted:
         only_end: "Till %{to} in your local time."
         only_start: "From %{from} in your local time."

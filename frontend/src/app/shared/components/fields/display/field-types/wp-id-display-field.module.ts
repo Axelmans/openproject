@@ -33,6 +33,8 @@ import { IdDisplayField } from 'core-app/shared/components/fields/display/field-
 import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
+// Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+import { ConfigurationService } from 'core-app/core/config/configuration.service';
 
 export class WorkPackageIdDisplayField extends IdDisplayField {
   @LazyInject() $state!:StateService;
@@ -42,6 +44,9 @@ export class WorkPackageIdDisplayField extends IdDisplayField {
   @LazyInject() currentProject!:CurrentProjectService;
 
   @LazyInject() pathHelper!:PathHelperService;
+
+  // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+  @LazyInject() configuration!:ConfigurationService;
 
   private uiStateBuilder:UiStateLinkBuilder = new UiStateLinkBuilder(this.$state, this.keepTab, this.currentProject, this.pathHelper);
 
@@ -54,7 +59,9 @@ export class WorkPackageIdDisplayField extends IdDisplayField {
     if (!this.value) {
       return;
     }
-    const link = this.uiStateBuilder.linkToShow(
+    // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+    const builderMethod = this.configuration.openDetailsOnIdClick() ? 'linkToDetails' : 'linkToShow';
+    const link = this.uiStateBuilder[builderMethod](
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       this.value,
       displayText,

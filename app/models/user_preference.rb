@@ -267,4 +267,16 @@ class UserPreference < ApplicationRecord
     first_day, last_day = date_range.split(" - ", 2)
     { "first_day" => first_day.presence, "last_day" => last_day.presence }
   end
+
+  # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+  def open_details_on_id_click?
+    settings.fetch(:open_details_on_id_click, false)
+  end
+
+  def open_details_on_id_click=(value)
+    settings[:open_details_on_id_click] = to_boolean(value)
+  end
+
+  alias :open_details_on_id_click :open_details_on_id_click?
+
 end

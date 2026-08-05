@@ -111,6 +111,35 @@ RSpec.describe PermittedParams do
     it_behaves_like "allows params"
   end
 
+  # Added to allow sorting by an unlimited number of columns (previously only indices 0-2 were permitted)
+  describe "#query" do
+    let(:params) do
+      ActionController::Parameters.new(
+        query: {
+          sort_criteria: {
+            "0" => %w(id asc),
+            "1" => %w(subject desc),
+            "2" => %w(status asc),
+            "3" => %w(priority desc),
+            "4" => %w(assignee asc)
+          }
+        }
+      )
+    end
+
+    subject { described_class.new(params, user).query }
+
+    it "permits more than 3 sort_criteria entries" do
+      expect(subject[:sort_criteria].to_h).to eq(
+        "0" => %w(id asc),
+        "1" => %w(subject desc),
+        "2" => %w(status asc),
+        "3" => %w(priority desc),
+        "4" => %w(assignee asc)
+      )
+    end
+  end
+
   describe "#news" do
     let(:attribute) { :news }
     let(:hash) do

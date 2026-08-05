@@ -161,15 +161,16 @@ class PermittedParams
   end
 
   def query
-    # there is a weird bug in strong_parameters gem which makes the permit call
-    # on the sort_criteria pattern return the sort_criteria-hash contents AND
-    # the sort_criteria hash itself (again with content) in the same hash.
-    # Here we try to circumvent this
+    # params.require(:query).permit(sort_criteria: {...}) returns a Parameters object with a
+    # single top-level "sort_criteria" key wrapping the actual permitted entries — pull that
+    # nested hash out directly instead of assuming/deleting a duplicate flat copy.
     p = params.require(:query).permit(*self.class.permitted_attributes[:query])
-    p[:sort_criteria] = params
+    # Added to allow sorting by an unlimited number of columns (previously only "0", "1", "2" were permitted)
+    sort_criteria_keys = params.dig(:query, :sort_criteria)&.keys || []
+    permitted_sort_criteria = params
       .require(:query)
-      .permit(sort_criteria: { "0" => [], "1" => [], "2" => [] })
-    p[:sort_criteria].delete :sort_criteria
+      .permit(sort_criteria: sort_criteria_keys.index_with { [] })
+    p[:sort_criteria] = permitted_sort_criteria[:sort_criteria]
     p
   end
 
