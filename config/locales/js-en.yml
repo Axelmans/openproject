@@ -317,6 +317,8 @@ en:
       more_values_not_shown: "There are %{total} more results, search to filter results."
       noneElement: "(none)"
       sorting:
+        # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+        closed_work_packages_last: "Display closed work packages at the bottom"
         criteria:
           add: "Add sort criterion"
           nth: "Sorting criteria %{position}"

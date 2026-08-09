@@ -49,6 +49,8 @@ module API
           p[:includeSubprojects] = query.include_subprojects
           p[:showHierarchies] = query.show_hierarchies
           p[:showSums] = query.display_sums?
+          # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+          p[:closedWorkPackagesLast] = query.closed_work_packages_last?
           p[:groupBy] = query.group_by if query.group_by?
           p[column_key] = columns_to_v3 unless query.has_default_columns?
 

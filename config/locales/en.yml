@@ -287,6 +287,8 @@ en:
         custom_field_section: Section
       query:
         child_work_packages: "Child work packages"
+        # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+        closed_work_packages_last: "Display closed work packages at the bottom"
         column_names: "Columns"
         columns: "Columns"
         display_representation: "Display mode"

@@ -274,6 +274,10 @@ module API
         property :include_subprojects
 
         property :display_sums, as: :sums
+
+        # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+        property :closed_work_packages_last
+
         property :public
 
         # The property is deprecated and should be removed

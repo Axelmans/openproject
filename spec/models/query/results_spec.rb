@@ -592,4 +592,46 @@ RSpec.describe Query::Results do
       end
     end
   end
+
+  # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  describe "#sorted_work_packages" do
+    let!(:open1) { create(:work_package, project: project1, status: create(:status, is_closed: false)) }
+    let!(:closed1) { create(:work_package, project: project1, status: create(:closed_status)) }
+    let!(:open2) { create(:work_package, project: project1, status: create(:status, is_closed: false)) }
+    let!(:closed2) { create(:work_package, project: project1, status: create(:closed_status)) }
+
+    let(:closed_work_packages_last) { false }
+
+    let(:query) do
+      # The query factory's after_build callback always adds a default "open status" filter
+      # (its guard checks `filters.present?`, so passing `filters: []` doesn't prevent it) -
+      # clear it explicitly afterwards so both open and closed work packages are considered.
+      build(:query,
+            project: project1,
+            sort_criteria: [%w(id asc)],
+            closed_work_packages_last:).tap { |q| q.filters = [] }
+    end
+
+    before do
+      login_as(user1)
+    end
+
+    subject { query_results.work_packages.to_a }
+
+    context "when disabled (default)" do
+      let(:closed_work_packages_last) { false }
+
+      it "only orders by the chosen sort criteria" do
+        expect(subject).to eq [open1, closed1, open2, closed2]
+      end
+    end
+
+    context "when enabled" do
+      let(:closed_work_packages_last) { true }
+
+      it "puts all open work packages before all closed ones, still ordered by the chosen criteria within each group" do
+        expect(subject).to eq [open1, open2, closed1, closed2]
+      end
+    end
+  end
 end

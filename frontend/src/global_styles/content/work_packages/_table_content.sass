@@ -112,6 +112,15 @@
   z-index: 1
   padding: 0 !important
 
+// Added to make the whole header cell clickable, not just the icon glyph, matching how normal
+// sortable column headers already fill their cell via .generic-table--sort-header
+.wp-table--columns-selection
+  display: flex
+  width: 100%
+  height: 100%
+  align-items: center
+  justify-content: center
+
 // Hide the context menu button outside mobile
 html:not(.-browser-mobile)
   .wp-table--context-menu-td

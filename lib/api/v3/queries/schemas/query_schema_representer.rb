@@ -94,6 +94,13 @@ module API
                  writable: true,
                  has_default: true
 
+          # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+          schema :closed_work_packages_last,
+                 type: "Boolean",
+                 required: false,
+                 writable: true,
+                 has_default: true
+
           schema :timeline_visible,
                  type: "Boolean",
                  required: false,

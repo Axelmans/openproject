@@ -9,6 +9,8 @@ import { WorkPackageViewOrderService } from 'core-app/features/work-packages/rou
 import { WorkPackageViewDisplayRepresentationService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-display-representation.service';
 import { WorkPackageViewIncludeSubprojectsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-include-subprojects.service';
 import { WorkPackageViewSumService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sum.service';
+// Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+import { WorkPackageViewClosedWorkPackagesLastService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-closed-work-packages-last.service';
 import { WorkPackageViewColumnsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-columns.service';
 import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
 import { WorkPackageViewAdditionalElementsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-additional-elements.service';
@@ -37,6 +39,8 @@ export class WorkPackageStatesInitializationService {
   protected wpTableSortBy = inject(WorkPackageViewSortByService);
   protected wpTableFilters = inject(WorkPackageViewFiltersService);
   protected wpTableSum = inject(WorkPackageViewSumService);
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  protected wpTableClosedLast = inject(WorkPackageViewClosedWorkPackagesLastService);
   protected wpTableTimeline = inject(WorkPackageViewTimelineService);
   protected wpTableHierarchies = inject(WorkPackageViewHierarchiesService);
   protected wpTableHighlighting = inject(WorkPackageViewHighlightingService);
@@ -151,6 +155,8 @@ export class WorkPackageStatesInitializationService {
     this.querySpace.query.putValue(query);
 
     this.wpTableSum.initialize(query);
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    this.wpTableClosedLast.initialize(query);
     this.wpTableColumns.initialize(query, results);
     this.wpTableSortBy.initialize(query, results);
     this.wpTableGroupBy.initialize(query, results);
@@ -168,6 +174,8 @@ export class WorkPackageStatesInitializationService {
   public applyToQuery(query:QueryResource) {
     this.wpTableFilters.applyToQuery(query);
     this.wpTableSum.applyToQuery(query);
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    this.wpTableClosedLast.applyToQuery(query);
     this.wpTableColumns.applyToQuery(query);
     this.wpTableSortBy.applyToQuery(query);
     this.wpTableGroupBy.applyToQuery(query);
@@ -198,6 +206,8 @@ export class WorkPackageStatesInitializationService {
     this.wpDisplayRepresentation.clear(reason);
     this.wpIncludeSubprojects.clear(reason);
     this.wpTableSum.clear(reason);
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    this.wpTableClosedLast.clear(reason);
 
     // Clear rendered state
     this.querySpace.tableRendered.clear(reason);

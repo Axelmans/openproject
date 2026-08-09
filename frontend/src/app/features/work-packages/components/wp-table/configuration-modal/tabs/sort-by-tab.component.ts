@@ -2,6 +2,8 @@ import { sortBy } from 'lodash-es';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Injector, OnInit, inject } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
+// Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+import { WorkPackageViewClosedWorkPackagesLastService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-closed-work-packages-last.service';
 import { TabComponent } from 'core-app/features/work-packages/components/wp-table/configuration-modal/tab-portal-outlet';
 import {
   QUERY_SORT_BY_ASC,
@@ -34,6 +36,8 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
   readonly injector = inject(Injector);
   readonly I18n = inject(I18nService);
   readonly wpTableSortBy = inject(WorkPackageViewSortByService);
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  readonly wpTableClosedLast = inject(WorkPackageViewClosedWorkPackagesLastService);
   readonly cdRef = inject(ChangeDetectorRef);
 
   public text = {
@@ -41,6 +45,8 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
     placeholder: this.I18n.t('js.placeholders.default'),
     // Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row
     add_criterion: this.I18n.t('js.filter.sorting.criteria.add'),
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    closed_work_packages_last: this.I18n.t('js.filter.sorting.closed_work_packages_last'),
     sorting_mode: {
       description: this.I18n.t('js.work_packages.table_configuration.sorting_mode.description'),
       automatic: this.I18n.t('js.work_packages.table_configuration.sorting_mode.automatic'),
@@ -66,6 +72,9 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
 
   public manualSortColumn:SortColumn;
 
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  public closedWorkPackagesLast = false;
+
   public onSave() {
     let sortElements;
     if (this.sortingMode === 'automatic') {
@@ -76,6 +85,9 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
 
     sortElements = sortElements.map((object) => this.getMatchingSort(object.column.href!, object.direction));
     this.wpTableSortBy.update(sortElements.filter((x):x is NonNullable<typeof x> => Boolean(x)));
+
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    this.wpTableClosedLast.setEnabled(this.closedWorkPackagesLast);
   }
 
   ngOnInit() {
@@ -107,6 +119,8 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
         });
 
         this.updateUsedColumns();
+        // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+        this.closedWorkPackagesLast = this.wpTableClosedLast.isEnabled;
         this.cdRef.markForCheck();
       });
   }

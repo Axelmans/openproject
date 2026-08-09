@@ -93,7 +93,15 @@ class Query::Results
       .joins(sort_criteria_joins)
       .joins(query.group_by_join_statement)
       .order(order_option)
+      .order(closed_work_packages_last_option)
       .order(sort_criteria_array)
+  end
+
+  # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  def closed_work_packages_last_option
+    return nil unless query.closed_work_packages_last?
+
+    Arel.sql("(SELECT statuses.is_closed FROM statuses WHERE statuses.id = work_packages.status_id) ASC")
   end
 
   def order_option

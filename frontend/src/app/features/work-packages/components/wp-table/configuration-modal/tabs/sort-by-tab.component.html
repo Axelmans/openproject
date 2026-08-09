@@ -93,6 +93,17 @@
         </button>
       </div>
     }
+    <!-- Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria -->
+    <div class="form--field -full-width">
+      <div class="form--field-container">
+        <label class="option-label">
+          <input type="checkbox"
+            [(ngModel)]="closedWorkPackagesLast"
+            name="closed_work_packages_last">
+          {{ text.closed_work_packages_last }}
+        </label>
+      </div>
+    </div>
   }
 </div>
 </form>

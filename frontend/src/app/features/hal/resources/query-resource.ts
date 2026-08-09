@@ -76,6 +76,9 @@ export class QueryResource extends HalResource {
 
   public sums:boolean;
 
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  public closedWorkPackagesLast:boolean;
+
   public hasError:boolean;
 
   public timelineVisible:boolean;

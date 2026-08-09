@@ -38,6 +38,8 @@ import { WorkPackageViewFiltersService } from 'core-app/features/work-packages/r
 import { WorkPackageViewTimelineService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-timeline.service';
 import { WorkPackageViewSelectionService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
 import { WorkPackageViewSumService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sum.service';
+// Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+import { WorkPackageViewClosedWorkPackagesLastService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-closed-work-packages-last.service';
 import { WorkPackageViewAdditionalElementsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-additional-elements.service';
 import { WorkPackageViewHighlightingService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-highlighting.service';
 import { WorkPackageCreateService } from 'core-app/features/work-packages/components/wp-new/wp-create.service';
@@ -78,6 +80,8 @@ export const WpIsolatedGraphQuerySpaceProviders = [
   WorkPackageViewTimelineService,
   WorkPackageViewSelectionService,
   WorkPackageViewSumService,
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  WorkPackageViewClosedWorkPackagesLastService,
   WorkPackageViewAdditionalElementsService,
   WorkPackageViewFocusService,
   WorkPackageViewHighlightingService,

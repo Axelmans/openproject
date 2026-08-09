@@ -376,6 +376,11 @@ class Query < ApplicationRecord
     display_sums
   end
 
+  # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  def closed_work_packages_last?
+    closed_work_packages_last
+  end
+
   def group_by_column
     groupable_columns.detect { |c| c.groupable && c.name.to_s == group_by }
   end
