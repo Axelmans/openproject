@@ -43,6 +43,7 @@ import { ApiV3ProjectsPaths } from 'core-app/core/apiv3/endpoints/projects/apiv3
 import { ApiV3StatusesPaths } from 'core-app/core/apiv3/endpoints/statuses/apiv3-statuses-paths';
 import { ApiV3RolesPaths } from 'core-app/core/apiv3/endpoints/roles/apiv3-roles-paths';
 import { ApiV3VersionsPaths } from 'core-app/core/apiv3/endpoints/versions/apiv3-versions-paths';
+import { ApiV3CustomOptionsPaths } from 'core-app/core/apiv3/endpoints/custom-options/apiv3-custom-options-paths';
 import { ApiV3RelationsPaths } from 'core-app/core/apiv3/endpoints/relations/apiv3-relations-paths';
 import { ApiV3NewsPaths } from 'core-app/core/apiv3/endpoints/news/apiv3-news-paths';
 import { ApiV3HelpTextsPaths } from 'core-app/core/apiv3/endpoints/help_texts/apiv3-help-texts-paths';
@@ -144,6 +145,12 @@ export class ApiV3Service {
 
   // /api/v3/versions
   public readonly versions = this.apiV3CustomEndpoint(ApiV3VersionsPaths);
+
+  // /api/v3/custom_options
+  public readonly custom_options = this.apiV3CustomEndpoint(ApiV3CustomOptionsPaths);
+
+  // /api/v3/custom_fields
+  public readonly custom_fields = this.apiV3CollectionEndpoint('custom_fields');
 
   // /api/v3/work_packages
   public readonly work_packages = this.apiV3CustomEndpoint(ApiV3WorkPackagesPaths);

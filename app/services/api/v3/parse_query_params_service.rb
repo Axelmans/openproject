@@ -75,6 +75,8 @@ module API
           display_representation: params[:displayRepresentation],
           show_hierarchies: boolearize(params[:showHierarchies]),
           include_subprojects: boolearize(params[:includeSubprojects]),
+          # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+          closed_work_packages_last: boolearize(params[:closedWorkPackagesLast]),
           timestamps: Timestamp.parse_multiple(params[:timestamps])
         }
       rescue ArgumentError => e

@@ -83,7 +83,7 @@ module API
               case custom_field.field_format
               when "user"
                 derive_principal_path_method(custom_value)
-              when "list"
+              when "list", "tags"
                 :custom_option
               when "hierarchy", "weighted_item_list"
                 :custom_field_item

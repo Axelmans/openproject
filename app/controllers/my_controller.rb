@@ -52,6 +52,8 @@ class MyController < ApplicationController
                              :update_participating,
                              :update_non_participating,
                              :update_date_alerts,
+                             # Added to allow resetting a user's remembered hierarchy row collapse state for debugging
+                             :reset_view_row_states,
                              :password,
                              :change_password,
                              :password_confirmation_dialog,
@@ -102,6 +104,14 @@ class MyController < ApplicationController
   end
 
   def interface; end
+
+  # Added to allow resetting a user's remembered hierarchy row collapse state for debugging
+  def reset_view_row_states
+    WorkPackages::ViewRowState.where(user: @user).delete_all
+
+    flash[:notice] = t(:notice_view_row_states_reset)
+    redirect_to action: :interface, status: :see_other
+  end
 
   def security
     @username = @user.login
@@ -162,7 +172,7 @@ class MyController < ApplicationController
     false
   end
 
-  def write_settings
+  def write_settings # rubocop:disable Metrics/AbcSize
     result = Users::UpdateService
                .new(user: current_user, model: current_user)
                .call(user_params)
@@ -174,7 +184,32 @@ class MyController < ApplicationController
       flash[:error] = error_account_update_failed(result)
     end
 
-    redirect_back_or_to(my_account_path)
+    # Added: support forms that auto-submit on change (e.g. My::LookAndFeelForm) via a
+    # turbo_stream flash response, alongside the classic redirect for other callers.
+    render_settings_flash_via_turbo_stream
+
+    respond_to_with_turbo_streams(status: result&.success ? :ok : :unprocessable_entity) do |format|
+      format.html do
+        flash.keep
+        redirect_back_or_to(my_account_path)
+      end
+    end
+  end
+
+  # flash.discard, since (unlike a redirect) a turbo_stream response never "spends" the
+  # session-persisted flash bucket on its own - without this, the toast rendered here would
+  # also reappear on the user's next page load. The format.html branch in #write_settings
+  # restores it with flash.keep, since that path still needs the flash to survive its redirect.
+  def render_settings_flash_via_turbo_stream # rubocop:disable Metrics/AbcSize
+    return unless flash[:notice] || flash[:error] || flash[:info]
+
+    message = flash[:notice] || flash[:info] || Array(flash[:error]).join(" ")
+    if flash[:error]
+      render_error_flash_message_via_turbo_stream(message:)
+    else
+      render_success_flash_message_via_turbo_stream(message:)
+    end
+    flash.discard
   end
 
   def handle_email_changes

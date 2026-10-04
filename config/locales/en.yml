@@ -391,8 +391,6 @@ en:
       user_preference:
         auto_hide_popups: "Automatically hide success banners"
         auto_hide_popups_caption: "When enabled, the green success banners will automatically disappear after 5 seconds."
-        button_update_alerts: "Update alerts"
-        button_update_look_and_feel: "Update look and feel"
         button_update_user_information: "Update profile"
         # Added to allow user to set automatic collapse of hierarchy on load
         collapse_hierarchy_on_load: "Collapse hierarchy on load"
@@ -415,6 +413,8 @@ en:
         increase_contrast_caption: "Enables high-contrast mode for the chosen colour mode."
         increase_theme_contrast: "Increase theme contrast"
         mode_guideline: "Some modes will overwrite custom theme colors for accessibility and legibility. Please select Light mode for full custom theme support."
+        remember_hierarchy_collapse_state: "Remember expanded/collapsed rows"
+        remember_hierarchy_collapse_state_caption: "When enabled, which rows you expanded or collapsed in a work packages list is remembered for your next visit."
         theme: "Color mode"
         time_zone: "Time zone"
         warn_on_leaving_unsaved: "Warn me when leaving a work package with unsaved changes"
@@ -3610,6 +3610,7 @@ en:
   label_system_storage: "Storage information"
   label_table_of_contents: "Table of contents"
   label_tag: "Tag"
+  label_tags: "Tags"
   label_team_planner: "Team Planner"
   label_template: "Template"
   label_templates: "Templates"
@@ -4262,6 +4263,10 @@ en:
         email_reminders: "Email reminders"
         notifications: "Notification settings"
       title: "Notification and email"
+    # Added to allow resetting a user's remembered hierarchy row collapse state
+    view_row_states:
+      button: "Reset remembered collapse state"
+      confirm: "This removes your remembered expand/collapse state for every work packages list. Continue?"
 
   news:
     index:
@@ -4354,6 +4359,8 @@ en:
   notice_unsuccessful_update_with_reason: "Update failed: %{reason}"
   notice_user_invitation_resent: An invitation has been sent to %{email}.
   notice_user_missing_authentication_method: User has yet to choose a password or another way to sign in.
+  # Added to allow resetting a user's remembered hierarchy row collapse state for debugging
+  notice_view_row_states_reset: "Your remembered hierarchy collapse state has been reset for all work packages lists."
   notice_wont_delete_auth_source: The LDAP connection cannot be deleted as long as there are still users using it.
 
   notifications:

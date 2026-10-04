@@ -84,6 +84,9 @@ import {
 import {
   VersionsEditFieldComponent,
 } from 'core-app/shared/components/fields/edit/field-types/versions-edit-field.component';
+import {
+  TagsEditFieldComponent,
+} from 'core-app/shared/components/fields/edit/field-types/tags-edit-field.component';
 import { ProjectPhaseAutocompleterComponent } from '../../autocompleter/project-phase-autocompleter/project-phase-autocompleter.component';
 
 export function initializeCoreEditFields(editFieldService:EditFieldService, selectAutocompleterRegisterService:SelectAutocompleterRegisterService) {
@@ -114,6 +117,7 @@ export function initializeCoreEditFields(editFieldService:EditFieldService, sele
         '[]Version',
         '[]CustomField::Hierarchy::Item',
       ])
+      .addFieldType(TagsEditFieldComponent, 'tags', ['[]Tag'])
       .addFieldType(FloatEditFieldComponent, 'float', ['Float'])
       .addFieldType(WorkPackageEditFieldComponent, 'workPackage', ['WorkPackage'])
       .addFieldType(BooleanEditFieldComponent, 'boolean', ['Boolean'])

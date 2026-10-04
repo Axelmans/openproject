@@ -80,6 +80,15 @@
             }
           </div>
         </div>
+        <!-- Added to allow removing a sort criterion via an explicit delete button, matching the Filters tab -->
+        <div class="form--field sort-by--remove-criterion">
+          <button type="button"
+            class="spot-link"
+            [title]="text.remove_criterion"
+            (click)="removeSortCriterion(sort)">
+            <op-icon icon-classes="icon-close icon4" />
+          </button>
+        </div>
       </div>
     }
     <!-- Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row -->

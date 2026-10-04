@@ -180,6 +180,34 @@ RSpec.describe UpdateQueryFromParamsService,
       end
     end
 
+    context "when using closed work packages last" do
+      let(:params) do
+        { closed_work_packages_last: }
+      end
+
+      context "when true" do
+        let(:closed_work_packages_last) { true }
+
+        it "sets the closed_work_packages_last" do
+          subject
+
+          expect(query.closed_work_packages_last)
+            .to be true
+        end
+      end
+
+      context "when false" do
+        let(:closed_work_packages_last) { false }
+
+        it "sets the closed_work_packages_last" do
+          subject
+
+          expect(query.closed_work_packages_last)
+            .to be false
+        end
+      end
+    end
+
     context "when providing timestamps" do
       let(:timestamps) do
         [

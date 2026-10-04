@@ -73,6 +73,9 @@ import {
 import {
   ResourcesDisplayField,
 } from 'core-app/shared/components/fields/display/field-types/resources-display-field.module';
+import {
+  TagsDisplayField,
+} from 'core-app/shared/components/fields/display/field-types/tags-display-field.module';
 import { TextDisplayField } from 'core-app/shared/components/fields/display/field-types/text-display-field.module';
 import { TypeDisplayField } from 'core-app/shared/components/fields/display/field-types/type-display-field.module';
 import { UserDisplayField } from 'core-app/shared/components/fields/display/field-types/user-display-field.module';
@@ -115,6 +118,7 @@ export function initializeCoreDisplayFields(displayFieldService:DisplayFieldServ
       .addFieldType(ProjectPhaseDisplayField, 'projectPhase', ['ProjectPhase'])
       .addFieldType(ResourcesDisplayField, 'resources', ['[]CustomOption', '[]CustomField::Hierarchy::Item'])
       .addFieldType(ResourcesDisplayField, 'resources', ['[]Version'])
+      .addFieldType(TagsDisplayField, 'tags', ['[]Tag'])
       .addFieldType(MultipleUserFieldModule, 'users', ['[]User'])
       .addFieldType(FormattableDisplayField, 'formattable', ['Formattable'])
       .addFieldType(DaysDurationDisplayField, 'duration', ['duration'])

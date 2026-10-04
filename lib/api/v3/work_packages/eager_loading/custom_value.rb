@@ -58,7 +58,7 @@ module API
                                user_values(cv.value)
                              when "version"
                                version_values(cv.value)
-                             when "list"
+                             when "list", "tags"
                                list_values(cv.value)
                              end
 
@@ -98,8 +98,10 @@ module API
             @version_values[id.to_i]
           end
 
+          # Added to also cover "tags" custom fields, which store their values as
+          # CustomOption ids exactly like "list" fields.
           def list_values(id)
-            @list_values ||= eager_load_values "list", CustomOption
+            @list_values ||= eager_load_values %w[list tags], CustomOption
 
             @list_values[id.to_i]
           end
@@ -117,10 +119,12 @@ module API
           end
 
           def custom_values_of(field_format)
+            formats = Array(field_format)
+
             grouped_custom_values
               .values
               .flatten
-              .select { |cv| cv.custom_field && cv.custom_field.field_format == field_format && cv.value.present? }
+              .select { |cv| cv.custom_field && formats.include?(cv.custom_field.field_format) && cv.value.present? }
           end
 
           def custom_field(id)

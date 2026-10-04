@@ -196,6 +196,14 @@ module API
             "#{work_packages}/available_projects"
           end
 
+          # Added to allow persisting per-user hierarchy row collapse state per work package list
+          def self.view_row_states(query_id: nil, project_id: nil)
+            path = "#{work_packages}/view_row_states"
+            scope = { query_id:, project_id: }.compact
+
+            scope.present? ? "#{path}?#{scope.to_query}" : path
+          end
+
           def self.available_relation_candidates(work_package_id)
             "#{work_package(work_package_id)}/available_relation_candidates"
           end
@@ -273,6 +281,11 @@ module API
 
           def self.custom_option(id)
             "#{root}/custom_options/#{id}"
+          end
+
+          # Added to allow POSTing new "tags" custom field options inline.
+          def self.custom_options
+            "#{root}/custom_options"
           end
 
           def self.day(date)

@@ -94,7 +94,7 @@ module Queries::Filters::Shared::CustomFieldFilter
       case custom_field.field_format
       when "user"
         ::Queries::Filters::Shared::CustomFields::User
-      when "list", "version"
+      when "list", "tags", "version"
         ::Queries::Filters::Shared::CustomFields::ListOptional
       when "hierarchy", "weighted_item_list"
         ::Queries::Filters::Shared::CustomFields::Hierarchy

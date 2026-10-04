@@ -1,0 +1,39 @@
+<ng-select [(ngModel)]="selectedOption"
+  [ngClass]="'inline-edit--field -multi-select -tag-select'"
+  [required]="required"
+  [clearable]="!required"
+  [disabled]="inFlight"
+  [id]="handler.htmlId"
+  [items]="availableOptions"
+  bindLabel="name"
+  [virtualScroll]="true"
+  [clearSearchOnAdd]="true"
+  [addTag]="createNewTag"
+  (keydown)="handler.handleUserKeydown($event, true)"
+  (open)="onOpen()"
+  (close)="onClose()"
+  (add)="repositionDropdown()"
+  (remove)="repositionDropdown()"
+  [multiple]="true"
+  [closeOnSelect]="false"
+  [appendTo]="appendTo"
+  [dropdownPosition]="'top'"
+  [hideSelected]="true">
+  <ng-template ng-tag-tmp let-search="searchTerm">
+    <b [textContent]="createLabel"></b>: {{ search }}
+  </ng-template>
+  <ng-template ng-label-tmp let-item="item">
+    <span class="op-tag-pill" [textContent]="item.name"></span>
+  </ng-template>
+  <ng-template ng-option-tmp let-item="item">
+    <span class="ng-option-label ellipsis" [textContent]="item.name"></span>
+  </ng-template>
+</ng-select>
+
+@if (!handler.inEditMode) {
+  <edit-field-controls [fieldController]="self"
+    (onSave)="handler.handleUserSubmit()"
+    (onCancel)="handler.handleUserCancel()"
+    [saveTitle]="text.save"
+    [cancelTitle]="text.cancel" />
+}

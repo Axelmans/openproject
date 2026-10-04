@@ -106,6 +106,7 @@ describe('UrlParamsHelper', () => {
         id: 1,
         name: 'knoblauch soße',
         sums: true,
+        closedWorkPackagesLast: true,
         timelineVisible: true,
         timelineZoomLevel: 'days',
         showHierarchies: true,
@@ -129,7 +130,7 @@ describe('UrlParamsHelper', () => {
 
     it('should encode query to params JSON', () => {
       const encodedJSON = UrlParamsHelper.encodeQueryJsonParams(query, additional);
-      const expectedJSON = '{"c":["type","status","soße"],"hi":true,"g":"status","s":true,"tv":true,"tzl":"days","hl":"inline","hla":["a","b"],"t":"type:desc","f":[{"n":"soße","o":"=","v":["knoblauch"]},{"n":"created_at","o":"<t-","v":["5"]}],"pa":10,"pp":100}';
+      const expectedJSON = '{"c":["type","status","soße"],"hi":true,"g":"status","s":true,"cl":true,"tv":true,"tzl":"days","hl":"inline","hla":["a","b"],"t":"type:desc","f":[{"n":"soße","o":"=","v":["knoblauch"]},{"n":"created_at","o":"<t-","v":["5"]}],"pa":10,"pp":100}';
 
       expect(encodedJSON).toEqual(expectedJSON);
     });
@@ -139,7 +140,7 @@ describe('UrlParamsHelper', () => {
     let params:string;
 
     beforeEach(() => {
-      params = '{"c":["type","status","soße"],"s":true,"tv":true,"tzl":"days","hl":"inline","hi":true,"g":"status","t":"type:desc,status:asc","f":[{"n":"soße","o":"=","v":["knoblauch"]},{"n":"created_at","o":"<t-","v":["5"]}],"pa":10,"pp":100}';
+      params = '{"c":["type","status","soße"],"s":true,"cl":true,"tv":true,"tzl":"days","hl":"inline","hi":true,"g":"status","t":"type:desc,status:asc","f":[{"n":"soße","o":"=","v":["knoblauch"]},{"n":"created_at","o":"<t-","v":["5"]}],"pa":10,"pp":100}';
     });
 
     it('should decode query params to object', () => {
@@ -148,6 +149,7 @@ describe('UrlParamsHelper', () => {
       const expected = {
         'columns[]': ['type', 'status', 'soße'],
         showSums: true,
+        closedWorkPackagesLast: true,
         timelineVisible: true,
         showHierarchies: true,
         timelineZoomLevel: 'days',
@@ -212,6 +214,7 @@ describe('UrlParamsHelper', () => {
         highlightingMode: 'inline',
         highlightedAttributes: [{ href: 'a' }, { href: 'b' }],
         sums: true,
+        closedWorkPackagesLast: true,
         columns: [{ id: 'type' }, { id: 'status' }, { id: 'soße' }],
         groupBy: {
           id: 'status',
@@ -238,6 +241,7 @@ describe('UrlParamsHelper', () => {
       const expected = {
         'columns[]': ['type', 'status', 'soße'],
         showSums: true,
+        closedWorkPackagesLast: true,
         groupBy: 'status',
         filters: JSON.stringify([
           {
@@ -298,6 +302,7 @@ describe('UrlParamsHelper', () => {
         highlightingMode: 'inline',
         timestamps: ['PT0S'],
         sums: false,
+        closedWorkPackagesLast: false,
       };
 
       additional = {};
@@ -316,6 +321,7 @@ describe('UrlParamsHelper', () => {
         ]),
         groupBy: '',
         showSums: false,
+        closedWorkPackagesLast: false,
         timelineVisible: false,
         showHierarchies: false,
         highlightingMode: 'inline',

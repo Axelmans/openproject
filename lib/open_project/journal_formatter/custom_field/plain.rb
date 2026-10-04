@@ -57,7 +57,7 @@ class OpenProject::JournalFormatter::CustomField::Plain < JournalFormatter::Base
     case custom_field.field_format
     when "hierarchy"
       :find_item_value
-    when "list"
+    when "list", "tags"
       :find_list_value
     when "user"
       :find_user_value

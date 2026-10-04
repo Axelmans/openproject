@@ -27,6 +27,11 @@
   }
 
   /* Generic color mapping for content variables */
+  <%# Added: extend the already-neutral header/sidebar mapping (previously only applied to
+      high-contrast and dark themes) to the default light theme too, so the header no longer
+      shows OpenProject's old blue wash next to the new Linear-style accent, and the sidebar's
+      selected-item indicator picks up the accent color consistently across all themes. %>
+  [data-light-theme=light],
   [data-light-theme=light_high_contrast],
   [data-dark-theme=dark],
   [data-dark-theme=dark_high_contrast] {
@@ -86,6 +91,12 @@
   /* For dark themes we are using a lighter version of the accent and primary color. Otherwise they will not be seen */
   [data-dark-theme=dark],
   [data-dark-theme=dark_high_contrast] {
+      /* Added: overlays (modals/dropdowns/popovers) should read as floating above the
+         canvas, not sunk into it - the default --overlay-bgColor reuses --bgColor-inset,
+         which is meant for recessed wells (e.g. input backgrounds) and is the darkest
+         surface in the theme. --bgColor-muted is already the "elevated" surface level
+         (also used for --card-bgColor), so overlays reuse that instead. */
+      --overlay-bgColor: var(--bgColor-muted);
       --accent-color: var(--accent-color--dark-mode);
       --content-icon-color: var(--accent-color--dark-mode);
       --primary-button-color: var(--primary-button-color--dark-mode);

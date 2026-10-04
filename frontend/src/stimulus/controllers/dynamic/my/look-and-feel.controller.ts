@@ -29,13 +29,20 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
+import { OpColorMode } from 'core-app/core/setup/globals/theme-utils';
 
 export default class LookAndFeelController extends Controller {
-  static targets = ['themeSelect', 'autoThemeContrast', 'singleThemeContrast'];
+  static targets = [
+    'themeSelect', 'autoThemeContrast', 'singleThemeContrast',
+    'forceLightContrast', 'forceDarkContrast', 'increaseContrast',
+  ];
 
   declare themeSelectTarget:HTMLSelectElement;
   declare autoThemeContrastTarget:HTMLElement;
   declare singleThemeContrastTarget:HTMLElement;
+  declare forceLightContrastTarget:HTMLInputElement;
+  declare forceDarkContrastTarget:HTMLInputElement;
+  declare increaseContrastTarget:HTMLInputElement;
 
   private syncWithOsValue = 'sync_with_os';
 
@@ -45,6 +52,25 @@ export default class LookAndFeelController extends Controller {
 
   updateContrastOptions() {
     this.toggleOptionGroups();
+  }
+
+  // Added: apply the selected theme to the current page immediately (mirroring
+  // AutoThemeSwitcher#applyTheme/#applySystemTheme), instead of only on the next full
+  // page load - the auto-submit action on the same fields still persists it server-side.
+  applyThemeLive():void {
+    const theme = this.themeSelectTarget.value;
+
+    if (theme === this.syncWithOsValue) {
+      const colorMode = window.OpenProject.theme.detectSystemColorMode();
+      const forceContrast = colorMode === 'light'
+        ? this.forceLightContrastTarget.checked
+        : this.forceDarkContrastTarget.checked;
+      const increaseContrast = window.OpenProject.theme.prefersSystemHighContrast() || forceContrast;
+
+      window.OpenProject.theme.applyThemeToBody(colorMode, increaseContrast);
+    } else {
+      window.OpenProject.theme.applyThemeToBody(theme as OpColorMode, this.increaseContrastTarget.checked);
+    }
   }
 
   private toggleOptionGroups() {

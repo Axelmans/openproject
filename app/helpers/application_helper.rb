@@ -296,7 +296,7 @@ module ApplicationHelper
       external_links_enabled_value: Setting.capture_external_links?,
       rendered_at: Time.zone.now.iso8601,
       turbo: local_assigns[:turbo_opt_out] ? "false" : nil
-    }.merge(user_theme_data_attributes)
+    }.merge(User.current.anonymous? ? forced_dark_theme_data_attributes : user_theme_data_attributes)
      .compact
   end
 
@@ -320,6 +320,24 @@ module ApplicationHelper
     end
 
     theme_options
+  end
+
+  # Added: any page rendered for an anonymous (not-yet-logged-in) visitor - login,
+  # registration, password reset, 2FA challenge, recaptcha - always renders dark, regardless
+  # of the instance default, since there is no logged-in user whose preference would apply
+  # yet. Mirrors the non-sync_with_os shape of #user_theme_data_attributes for a fixed
+  # "dark" theme. Deliberately keyed on User.current.anonymous? rather than a specific
+  # layout/controller, since layouts like "no_menu" are shared with logged-in-only flows
+  # (e.g. the project/type creation wizards) whose own theme preference must still apply.
+  def forced_dark_theme_data_attributes
+    {
+      auto_theme_switcher_theme_value: "dark",
+      auto_theme_switcher_desktop_light_high_contrast_logo_class: "op-logo--link_high_contrast",
+      auto_theme_switcher_mobile_white_logo_class: "op-logo--icon_white",
+      color_mode: "dark",
+      dark_theme: "dark",
+      auto_theme_switcher_increase_contrast_value: false
+    }
   end
 
   def labelled_tabular_form_for(record, options = {}, &)

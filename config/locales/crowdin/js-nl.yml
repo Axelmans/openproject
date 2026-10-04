@@ -338,10 +338,10 @@ nl:
       close_search: Sluit zoekopdracht
       current_project: In dit project
       current_project_and_all_descendants: In dit project + subprojecten
-      direct_hit_available: Work package with exact ID found. Press Enter to open it.
-      items_available: "%{count} items available"
+      direct_hit_available: Werkpakket met exacte ID gevonden. Druk op Enter om het te openen.
+      items_available: "%{count} resultaten beschikbaar"
       recently_viewed: Recent bekeken
-      search_placeholder_expanded: Search work packages by subject, project, type, status or ID
+      search_placeholder_expanded: Zoek werkpakketten op onderwerp, project, type, status of ID
       title:
         all_projects: alle projecten
         project_and_subprojects: en alle subprojecten

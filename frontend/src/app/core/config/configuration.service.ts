@@ -64,6 +64,12 @@ export class ConfigurationService {
     return this.configuration.userPreferences.collapseHierarchyOnLoad;
   }
 
+  // Added to allow the user to control whether hierarchy row collapse/expand state is
+  // remembered across visits
+  public rememberHierarchyCollapseState():boolean {
+    return this.configuration.userPreferences.rememberHierarchyCollapseState;
+  }
+
   // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
   public openDetailsOnIdClick():boolean {
     return this.configuration.userPreferences.openDetailsOnIdClick

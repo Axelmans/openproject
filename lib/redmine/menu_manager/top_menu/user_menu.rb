@@ -30,6 +30,11 @@
 
 module Redmine::MenuManager::TopMenu::UserMenu
   def render_user_top_menu_node(items = first_level_menu_items_for(:account_menu))
+    # Added: the full login page always renders everything this dropdown could offer
+    # (login form, auth providers, register/forgot-password links), so showing the
+    # dropdown there too would only ever duplicate it.
+    return "".html_safe if on_full_login_page?
+
     if omniauth_direct_login? && !User.current.logged?
       render_direct_login
     else

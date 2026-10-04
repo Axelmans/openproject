@@ -42,6 +42,8 @@ module API
           # This is also true when the :id param is declared to be of type: Integer.
           mount ::API::V3::WorkPackages::AvailableProjectsOnCreateAPI
           mount ::API::V3::WorkPackages::Schema::WorkPackageSchemasAPI
+          # Added to allow persisting per-user hierarchy row collapse state per work package list
+          mount ::API::V3::WorkPackages::ViewRowStates::ViewRowStatesAPI
 
           get do
             authorize_in_any_work_package(:view_work_packages)

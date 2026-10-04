@@ -34,7 +34,7 @@ module CustomField::OrderStatements
     "int" => :join_for_order_by_int_sql,
     "float" => :join_for_order_by_float_sql,
     "calculated_value" => :join_for_order_by_calculated_value_sql,
-    "list" => :join_for_order_by_list_sql,
+    %w[list tags] => :join_for_order_by_list_sql,
     "user" => :join_for_order_by_user_sql,
     "version" => :join_for_order_by_version_sql,
     %w[hierarchy weighted_item_list] => :join_for_order_by_hierarchy_sql
@@ -71,7 +71,7 @@ module CustomField::OrderStatements
   # Returns the expression to use in SELECT clause if it differs from one used
   # to group by
   def group_by_select_statement
-    return unless %w[list hierarchy weighted_item_list].include?(field_format)
+    return unless %w[list tags hierarchy weighted_item_list].include?(field_format)
 
     # MIN needed to not add this column to group by, ANY_VALUE can be used when
     # minimum required PostgreSQL becomes 16
@@ -88,7 +88,7 @@ module CustomField::OrderStatements
 
   private
 
-  def can_be_used_for_grouping? = field_format.in?(%w[list date bool int float string link hierarchy])
+  def can_be_used_for_grouping? = field_format.in?(%w[list tags date bool int float string link hierarchy])
 
   # Template for all the join statements.
   #

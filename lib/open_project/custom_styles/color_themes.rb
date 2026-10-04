@@ -38,8 +38,11 @@ module OpenProject::CustomStyles
     DEPRECATED_PRIMARY_DARK_COLOR = "#175A8E".freeze
     DEPRECATED_LINK_COLOR = "#155282".freeze
     DEPRECATED_MAIN_MENU_COLOR = "#333739".freeze
-    PRIMER_PRIMARY_BUTTON_COLOR = "#1F883D".freeze
-    ACCENT_COLOR = "#1A67A3".freeze
+    # Added to keep the EE admin theme-picker's default preset in sync with the Linear-style
+    # accent now shipped as the CSS default (see _variable_defaults.scss), even though this
+    # preset is inert unless EE branding is active.
+    PRIMER_PRIMARY_BUTTON_COLOR = "#5E6AD2".freeze
+    ACCENT_COLOR = "#5E6AD2".freeze
 
     THEMES = [
       {
@@ -47,9 +50,9 @@ module OpenProject::CustomStyles
         colors: {
           "primary-button-color" => PRIMER_PRIMARY_BUTTON_COLOR,
           "accent-color" => ACCENT_COLOR,
-          "header-bg-color" => "#1A67A3",
+          "header-bg-color" => "#F6F8FA",
           "main-menu-bg-color" => "#FFFFFF",
-          "main-menu-bg-selected-background" => "#175A8E",
+          "main-menu-bg-selected-background" => "#5E6AD2"
         }
       },
       {
@@ -59,7 +62,7 @@ module OpenProject::CustomStyles
           "accent-color" => ACCENT_COLOR,
           "header-bg-color" => "#FAFAFA",
           "main-menu-bg-color" => "#ECECEC",
-          "main-menu-bg-selected-background" => "#A9A9A9",
+          "main-menu-bg-selected-background" => "#A9A9A9"
         },
         logo: "logo_openproject.png"
       },
@@ -70,7 +73,7 @@ module OpenProject::CustomStyles
           "accent-color" => ACCENT_COLOR,
           "header-bg-color" => "#05002C",
           "main-menu-bg-color" => "#0E2045",
-          "main-menu-bg-selected-background" => "#3270DB",
+          "main-menu-bg-selected-background" => "#3270DB"
         }
       }
     ].freeze

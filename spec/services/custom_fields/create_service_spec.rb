@@ -114,5 +114,40 @@ RSpec.describe CustomFields::CreateService, type: :model do
         end
       end
     end
+
+    # Added to allow tags to be used on any work package type right away, without the
+    # manual per-type activation step other custom field formats require.
+    describe "tags custom field" do
+      let(:custom_field_class) { WorkPackageCustomField }
+      let(:contract_class) { CustomFields::CreateContract }
+      let(:common_attributes) do
+        {
+          type: custom_field_class.to_s,
+          field_format: "tags",
+          name: "foo"
+        }
+      end
+
+      shared_let(:type1) { create(:type) }
+      shared_let(:type2) { create(:type) }
+
+      context "when creating a tags custom field" do
+        let(:attributes) { common_attributes }
+
+        it "links it to all existing types" do
+          expect(subject).to be_success
+          expect(subject.result.types).to contain_exactly(type1, type2)
+        end
+      end
+
+      context "when creating a non-tags custom field" do
+        let(:attributes) { { **common_attributes, field_format: "list" } }
+
+        it "does not link it to any type" do
+          expect(subject).to be_success
+          expect(subject.result.types).to be_empty
+        end
+      end
+    end
   end
 end

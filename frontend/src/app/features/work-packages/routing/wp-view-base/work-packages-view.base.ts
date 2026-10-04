@@ -88,6 +88,10 @@ import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destr
 import {
   WorkPackageViewBaselineService,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-baseline.service';
+// Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+import {
+  WorkPackageViewClosedWorkPackagesLastService,
+} from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-closed-work-packages-last.service';
 import { ActionsService } from 'core-app/core/state/actions/actions.service';
 import { tableRefreshRequest } from 'core-app/features/work-packages/routing/wp-view-base/work-packages-view.actions';
 
@@ -122,6 +126,9 @@ export abstract class WorkPackagesViewBase extends UntilDestroyedMixin implement
   readonly wpTablePagination = inject(WorkPackageViewPaginationService);
 
   readonly wpTableOrder = inject(WorkPackageViewOrderService);
+
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  readonly wpTableClosedLast = inject(WorkPackageViewClosedWorkPackagesLastService);
 
   readonly wpListService = inject(WorkPackagesListService);
 
@@ -195,6 +202,8 @@ export abstract class WorkPackagesViewBase extends UntilDestroyedMixin implement
     this.setupChangeObserver(this.wpDisplayRepresentation);
     this.setupChangeObserver(this.wpIncludeSubprojects);
     this.setupChangeObserver(this.wpTableBaseline);
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    this.setupChangeObserver(this.wpTableClosedLast);
   }
 
   /**

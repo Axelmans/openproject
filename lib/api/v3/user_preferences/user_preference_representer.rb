@@ -63,6 +63,9 @@ module API
         property :collapse_hierarchy_on_load
         # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
         property :open_details_on_id_click
+        # Added to allow the user to control whether hierarchy row collapse/expand state
+        # is remembered across visits
+        property :remember_hierarchy_collapse_state
         property :comments_in_reverse_order,
                  as: :commentSortDescending
         property :auto_hide_popups

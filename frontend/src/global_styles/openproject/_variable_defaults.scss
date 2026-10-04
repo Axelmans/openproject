@@ -29,11 +29,13 @@
 
 // use CSS4 variables for easier theming
 :root {
-  --primary-button-color: #1F883D;
-  --primary-button-color--major1: #197032;
-  --primary-button-color--minor1: #d2e7d8;
-  --primary-button-color--minor2: #a5cfb1;
-  --primary-button-color--dark-mode: #238636;
+  // Added to adopt Linear's lavender-indigo accent instead of OpenProject's default
+  // green/blue split (primary-button-color and accent-color are unified to the same hue).
+  --primary-button-color: #5E6AD2;
+  --primary-button-color--major1: #4D57AC;
+  --primary-button-color--minor1: #DFE1F6;
+  --primary-button-color--minor2: #BFC3ED;
+  --primary-button-color--dark-mode: #828EFF;
 
   --control-checked-color: var(--accent-color);
   --control-checked-color--major1: var(--accent-color--major1);
@@ -61,21 +63,23 @@
   --base-line-height: 1.5;
   --base-text-weight-bold: 600;
   --secondary-color: #bfbfbf;
-  --accent-color: #1A67A3;
-  --accent-color--major1: #155282;
-  --accent-color--major2: #103e62;
-  --accent-color--minor1: #d1e1ed;
-  --accent-color--minor2: #a3c2da;
-  --accent-color--dark-mode: #4493f8;
+  --accent-color: #5E6AD2;
+  --accent-color--major1: #4B55A8;
+  --accent-color--major2: #38407E;
+  --accent-color--minor1: #DFE1F6;
+  --accent-color--minor2: #BFC3ED;
+  --accent-color--dark-mode: #828EFF;
   --font-color-on-primary: #FFFFFF;
   --list-side-margin: 40px;
   --header-height: 55px;
-  --header-bg-color: #1A67A3;
-  --header-border-bottom-color: #155282;
+  // Fallback only - always overridden by the theme-scoped neutral mapping in
+  // _primer_color_mapping.erb for every real theme (light/dark/high-contrast).
+  --header-bg-color: #F6F8FA;
+  --header-border-bottom-color: #D1D9E0;
   --header-border-bottom-width: 0;
   --header-item-font-size: 14px;
-  --header-item-font-color: #FFFFFF;
-  --header-item-font-hover-color: #FFFFFF;
+  --header-item-font-color: #24292F;
+  --header-item-font-hover-color: #24292F;
   --main-menu-toggler-top-spacing: 18px;
   --main-menu-toggler-z-index: 550;
   --main-menu-width: 280px;
@@ -85,7 +89,9 @@
   --main-menu-border-width: 1px;
   --main-menu-item-height: 36px;
   --main-menu-bg-color: #FFFFFF;
-  --main-menu-bg-selected-background: #175A8E;
+  // Selected sidebar item indicator - a sparing, functional accent use, so this becomes
+  // the new Linear-purple accent (unlike the header background, which stays neutral).
+  --main-menu-bg-selected-background: #5E6AD2;
   --main-menu-font-color: var(--body-font-color);
   --main-menu-resizer-color: var(--main-menu-border-color);
   --main-menu-selected-font-color: var(--main-menu-font-color);
@@ -114,10 +120,11 @@
   --button--primary-border-disabled-color: var(--primary-button-color--minor2);
   --button--primary-font-color: var(--font-color-on-primary);
   --generic-table--header-font-size: 0.875rem;
-  --generic-table--header-height: 45px;
-  --generic-table--footer-height: 34px;
+  // Reduced to a denser, Linear-inspired row/header height for the work packages table.
+  --generic-table--header-height: 40px;
+  --generic-table--footer-height: 32px;
   --timeline--type-fallback-color: rgba(150, 150, 150, 0.8);
-  --table-timeline--row-height: 40px;
+  --table-timeline--row-height: 36px;
   --status-selector-bg-color: #F99601;
   --status-selector-border-color: transparent;
   --warn:#C92A2A;

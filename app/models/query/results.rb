@@ -40,6 +40,11 @@ class Query::Results
   # this constant against the live AliasTracker implementation and will fail if Rails changes theirs.
   RAW_JOIN_TABLE_SCAN_REGEX = /JOIN(?:\s+\w+)?\s+(?:\S+\s+)?(?:"(\w+)"|(\w+))\sON/i
 
+  # Added to keep an ancestor and all of its descendants together as one contiguous block when
+  # sorting/paginating in hierarchy mode, instead of a flat closed_work_packages_last/id sort
+  # potentially scattering an open parent and its closed child onto different pages.
+  HIERARCHY_ID_SCALE = 10**15
+
   attr_accessor :query
 
   def initialize(query)
@@ -89,12 +94,22 @@ class Query::Results
   end
 
   def sorted_work_packages
-    work_package_scope
-      .joins(sort_criteria_joins)
-      .joins(query.group_by_join_statement)
-      .order(order_option)
-      .order(closed_work_packages_last_option)
-      .order(sort_criteria_array)
+    apply_order(
+      work_package_scope
+        .joins(sort_criteria_joins)
+        .joins(query.group_by_join_statement)
+        .order(order_option)
+    )
+  end
+
+  # Added so that a work package's ancestors and descendants always stay together as one
+  # contiguous, unsplit block when sorting/paginating in hierarchy mode - see hierarchy_order_option.
+  def apply_order(scope)
+    if query.show_hierarchies?
+      scope.order(hierarchy_order_option).order(hierarchy_tie_breaker)
+    else
+      scope.order(closed_work_packages_last_option).order(sort_criteria_array)
+    end
   end
 
   # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
@@ -102,6 +117,67 @@ class Query::Results
     return nil unless query.closed_work_packages_last?
 
     Arel.sql("(SELECT statuses.is_closed FROM statuses WHERE statuses.id = work_packages.status_id) ASC")
+  end
+
+  def hierarchy_order_option
+    Arel.sql("(#{hierarchy_path_subquery}) ASC")
+  end
+
+  # Per row: a bigint[] representing the root-to-self path of this work package's ancestor
+  # chain (itself included, at generations 0). Postgres compares arrays element by element,
+  # with a shorter array (an ancestor) always sorting before any array that has it as a strict
+  # prefix (its descendants) - so ordering by this array yields a depth-first pre-order
+  # traversal where every ancestor+descendants family stays contiguous, with
+  # closed_work_packages_last and the sort criterion applied at every tree level independently.
+  #
+  # Uses ARRAY(subquery) rather than ARRAY_AGG: the latter is an aggregate and would force a
+  # GROUP BY on the whole (already complex, paginated) relation.
+  #
+  # work_package_hierarchies (see WorkPackage#has_closure_tree) always contains a generations: 0
+  # self-row for every work package, so this subquery is never empty.
+  def hierarchy_path_subquery
+    <<~SQL.squish
+      ARRAY(
+        SELECT #{hierarchy_level_sort_expression}
+        FROM work_package_hierarchies wph
+        INNER JOIN work_packages ancestors_wp ON ancestors_wp.id = wph.ancestor_id
+        INNER JOIN statuses ancestors_status ON ancestors_status.id = ancestors_wp.status_id
+        WHERE wph.descendant_id = work_packages.id
+        ORDER BY wph.generations DESC
+      )
+    SQL
+  end
+
+  # Encodes one ancestor-chain level into a single bigint that sorts correctly for both
+  # closed_work_packages_last (open always ranks before closed) and the id sort criterion in
+  # its chosen direction. Intentionally limited to the id criterion for now; other sort
+  # criteria still get a valid, family-contiguous, closed-last-aware id fallback per level.
+  def hierarchy_level_sort_expression
+    closed_component =
+      if query.closed_work_packages_last?
+        "(CASE WHEN ancestors_status.is_closed THEN 1 ELSE 0 END)::bigint * #{HIERARCHY_ID_SCALE}"
+      else
+        "0::bigint"
+      end
+
+    "#{closed_component} + #{hierarchy_id_component}"
+  end
+
+  def hierarchy_id_component
+    if hierarchy_id_sort_direction == "desc"
+      "(#{HIERARCHY_ID_SCALE} - ancestors_wp.id)"
+    else
+      "ancestors_wp.id"
+    end
+  end
+
+  def hierarchy_id_sort_direction
+    attribute, direction = query.sort_criteria.first
+    attribute == "id" ? direction : "asc"
+  end
+
+  def hierarchy_tie_breaker
+    Arel.sql("work_packages.id ASC")
   end
 
   def order_option

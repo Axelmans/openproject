@@ -44,17 +44,22 @@ module API
           "user" => "User",
           "version" => "Version",
           "list" => "CustomOption",
+          # Added to allow a "tags" custom field type: same underlying CustomOption resource as
+          # "list", but a distinct schema type so the frontend can render it as pills without
+          # affecting plain "list" fields.
+          "tags" => "Tag",
           "hierarchy" => "CustomField::Hierarchy::Item",
           "weighted_item_list" => "CustomField::Hierarchy::Item",
           "calculated_value" => "CalculatedValue"
         }.freeze
 
-        LINK_FORMATS = %w(list user version hierarchy weighted_item_list).freeze
+        LINK_FORMATS = %w(list tags user version hierarchy weighted_item_list).freeze
 
         NAMESPACE_MAP = {
           "user" => %w[users groups placeholder_users],
           "version" => "versions",
           "list" => "custom_options",
+          "tags" => "custom_options",
           "hierarchy" => "custom_field_items",
           "weighted_item_list" => "custom_field_items"
         }.freeze
@@ -63,6 +68,7 @@ module API
           "user" => "::API::V3::Principals::PrincipalRepresenterFactory",
           "version" => "::API::V3::Versions::VersionRepresenter",
           "list" => "::API::V3::CustomOptions::CustomOptionRepresenter",
+          "tags" => "::API::V3::CustomOptions::CustomOptionRepresenter",
           "hierarchy" => "::API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter",
           "weighted_item_list" => "::API::V3::CustomFields::Hierarchy::HierarchyItemRepresenter"
         }.freeze
@@ -119,7 +125,7 @@ module API
             inject_version_schema(custom_field)
           when "user"
             inject_user_schema(custom_field)
-          when "list"
+          when "list", "tags"
             inject_list_schema(custom_field)
           when "hierarchy", "weighted_item_list"
             inject_hierarchy_schema(custom_field)

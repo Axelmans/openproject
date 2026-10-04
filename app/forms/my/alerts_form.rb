@@ -38,7 +38,8 @@ class My::AlertsForm < ApplicationForm
                    label: helpers.t("activerecord.attributes.user_preference.auto_hide_popups"),
                    caption: helpers.t("activerecord.attributes.user_preference.auto_hide_popups_caption")
 
-      fg.submit(name: :submit, label: helpers.t("activerecord.attributes.user_preference.button_update_alerts"), scheme: :default)
+      # Added: every field in this form auto-saves on change (see the form's auto-submit
+      # wiring in app/views/my/interface.html.erb), so no submit button.
     end
   end
 end

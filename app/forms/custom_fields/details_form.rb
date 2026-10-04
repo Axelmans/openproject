@@ -237,7 +237,7 @@ module CustomFields
     end
 
     def show_default_text_field?
-      %w[list bool date text user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
+      %w[list tags bool date text user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_default_rich_text_field?
@@ -253,11 +253,11 @@ module CustomFields
     end
 
     def show_min_max_field?
-      %w[list bool date user version link hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
+      %w[list tags bool date user version link hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_regex_field?
-      %w[list bool date user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
+      %w[list tags bool date user version hierarchy weighted_item_list calculated_value].exclude?(model.field_format)
     end
 
     def show_right_to_left_field?
@@ -265,7 +265,9 @@ module CustomFields
     end
 
     def show_multi_value_field?
-      model.multi_value_possible?
+      # Tags fields are always multi-value (forced, see CustomField#force_multi_value_for_tags) -
+      # not a user choice, so the checkbox is hidden even though multi_value_possible? is true.
+      model.multi_value_possible? && model.field_format != "tags"
     end
 
     def show_formula_field?

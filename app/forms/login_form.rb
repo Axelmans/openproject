@@ -29,9 +29,6 @@
 #++
 
 class LoginForm < ApplicationForm
-  include ApplicationHelper
-  include OpPrimer::ComponentHelpers
-
   form do |f|
     f.hidden(name: "back_url", value: @back_url) if @back_url.present?
 
@@ -64,27 +61,12 @@ class LoginForm < ApplicationForm
                                 num_days: I18n.t("datetime.distance_in_words.x_days", count: Setting.autologin))
     end
 
+    # Added to allow the Login button to be the single, full-width primary action in the
+    # card (Linear-style); the secondary register/forgot-password links moved out of this
+    # form entirely, into account/_login_footer_links, so they can sit below the auth
+    # providers section instead of crowding the submit button.
     f.html_content do
-      flex_layout(justify_content: :space_between, align_items: :center) do |flex|
-        flex.with_column do
-          render(Primer::Beta::Button.new(type: :submit, scheme: :primary)) { I18n.t(:button_login) }
-        end
-
-        flex.with_column do
-          flex_layout do |links|
-            if Setting::SelfRegistration.enabled?
-              links.with_row do
-                render(Primer::Beta::Link.new(href: url_helpers.account_register_path)) { I18n.t(:label_register) }
-              end
-            end
-            if Setting.lost_password?
-              links.with_row do
-                render(Primer::Beta::Link.new(href: url_helpers.account_lost_password_path)) { I18n.t(:label_password_lost) }
-              end
-            end
-          end
-        end
-      end
+      render(Primer::Beta::Button.new(type: :submit, scheme: :primary, block: true)) { I18n.t(:button_login) }
     end
   end
 

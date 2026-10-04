@@ -44,6 +44,8 @@ module Queries
     attribute :show_hierarchies
     attribute :display_representation
     attribute :include_subprojects
+    # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    attribute :closed_work_packages_last
 
     attribute :column_names # => columns
     attribute :filters

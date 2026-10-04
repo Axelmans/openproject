@@ -1318,8 +1318,9 @@ module Settings
         default: true,
         format: :boolean
       },
+      # Changed default to dark, matching the Linear-style dark-mode-first direction.
       user_default_theme: {
-        default: "light",
+        default: "dark",
         format: :string,
         allowed: -> do
           UserPreferences::Schema.schema.dig("definitions", "UserPreferences", "properties", "theme", "enum")

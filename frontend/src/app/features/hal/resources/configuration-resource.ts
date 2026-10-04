@@ -38,6 +38,9 @@ export interface ConfigurationUserPreferences {
   collapseHierarchyOnLoad:boolean;
   // Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
   openDetailsOnIdClick: boolean
+  // Added to allow the user to control whether hierarchy row collapse/expand state is
+  // remembered across visits
+  rememberHierarchyCollapseState:boolean;
   autoHidePopups:boolean;
 }
 

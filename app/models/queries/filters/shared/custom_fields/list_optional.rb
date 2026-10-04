@@ -39,7 +39,7 @@ module Queries::Filters::Shared
         case field_format
         when "version"
           ::Version.where(id: values)
-        when "list"
+        when "list", "tags"
           custom_field.custom_options.where(id: values)
         else
           super

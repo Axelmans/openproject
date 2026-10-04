@@ -34,6 +34,9 @@
                 "open_details_on_id_click": {
                   "type": "boolean"
                 },
+                "remember_hierarchy_collapse_state": {
+                  "type": "boolean"
+                },
                 "comments_sorting": {
                     "type": "string",
                     "enum": ["asc", "desc"]

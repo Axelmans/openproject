@@ -50,6 +50,8 @@ export interface QueryProps {
   c:string[];
   // Sums enabled?
   s?:boolean;
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  cl?:boolean;
   // Sort by criteria
   t?:string;
   // Group by criteria
@@ -85,6 +87,8 @@ export interface QueryRequestParams {
   offset:string|number;
   'columns[]':string[];
   showSums:boolean;
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  closedWorkPackagesLast:boolean;
   timelineVisible:boolean;
   timelineLabels:string;
   timelineZoomLevel:string;
@@ -146,6 +150,7 @@ export class UrlParamsHelperService {
       dr: query.displayRepresentation,
       is: query.includeSubprojects,
       ...this.encodeSums(query),
+      ...this.encodeClosedWorkPackagesLast(query),
       ...this.encodeTimelineVisible(query),
       ...this.encodeHighlightingMode(query),
       ...this.encodeHighlightedAttributes(query),
@@ -168,6 +173,15 @@ export class UrlParamsHelperService {
   private encodeSums(query:QueryResource):Partial<QueryProps> {
     if (query.sums) {
       return { s: query.sums };
+    }
+
+    return {};
+  }
+
+  // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  private encodeClosedWorkPackagesLast(query:QueryResource):Partial<QueryProps> {
+    if (query.closedWorkPackagesLast) {
+      return { cl: query.closedWorkPackagesLast };
     }
 
     return {};
@@ -262,6 +276,11 @@ export class UrlParamsHelperService {
       queryData.showSums = properties.s;
     }
 
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    if (properties.cl) {
+      queryData.closedWorkPackagesLast = properties.cl;
+    }
+
     queryData.timelineVisible = properties.tv;
 
     if (properties.tv) {
@@ -346,6 +365,8 @@ export class UrlParamsHelperService {
 
     queryData['columns[]'] = this.buildV3GetColumnsFromQueryResource(query);
     queryData.showSums = query.sums;
+    // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+    queryData.closedWorkPackagesLast = !!query.closedWorkPackagesLast;
     queryData.timelineVisible = !!query.timelineVisible;
 
     if (query.timelineVisible) {

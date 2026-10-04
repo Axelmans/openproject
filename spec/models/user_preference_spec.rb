@@ -250,10 +250,10 @@ RSpec.describe UserPreference do
 
   describe "#theme" do
     context "when none is specified" do
-      it "defaults to light" do
-        expect(subject.theme).to eq("light")
-        expect(subject).to be_a_light_theme
-        expect(subject).to be_a_light_color_mode
+      it "defaults to the instance-wide user_default_theme setting (dark)" do
+        expect(subject.theme).to eq("dark")
+        expect(subject).to be_a_dark_theme
+        expect(subject).to be_a_dark_color_mode
       end
     end
 

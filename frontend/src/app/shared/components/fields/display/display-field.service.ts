@@ -36,6 +36,9 @@ import {
   MultipleLinesCustomOptionsDisplayField,
 } from 'core-app/shared/components/fields/display/field-types/multiple-lines-custom-options-display-field.module';
 import {
+  TagsDisplayField,
+} from 'core-app/shared/components/fields/display/field-types/tags-display-field.module';
+import {
   MultipleLinesUserFieldModule,
 } from 'core-app/shared/components/fields/display/field-types/multiple-lines-user-display-field.module';
 import {
@@ -110,6 +113,11 @@ export class DisplayFieldService extends AbstractFieldService<DisplayField, IDis
     const isCustomMultiLinesField = ['[]CustomOption'].includes(schema.type);
     if (context.container === 'single-view' && isCustomMultiLinesField) {
       return new MultipleLinesCustomOptionsDisplayField(fieldName, context);
+    }
+
+    const isTagsField = ['[]Tag'].includes(schema.type);
+    if (context.container === 'single-view' && isTagsField) {
+      return new TagsDisplayField(fieldName, context);
     }
 
     const isHierarchyItemsField = ['CustomField::Hierarchy::Item'].includes(schema.type);

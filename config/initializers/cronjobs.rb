@@ -71,6 +71,11 @@ Rails.application.config.after_initialize do
       "RecurringMeetings::InitNextOccurrenceWatchdogJob": {
         cron: "11 05 * * *",
         class: RecurringMeetings::InitNextOccurrenceWatchdogJob.name
+      },
+      # Added to allow persisting per-user hierarchy row collapse state per work package list
+      "WorkPackages::ViewRowStates::CleanupJob": {
+        cron: "17 3 * * 0", # runs at 03:17 sundays
+        class: WorkPackages::ViewRowStates::CleanupJob.name
       }
     }
   )

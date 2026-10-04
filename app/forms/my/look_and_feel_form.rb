@@ -42,7 +42,7 @@ class My::LookAndFeelForm < ApplicationForm
         input_width: :small,
         data: {
           my__look_and_feel_target: "themeSelect",
-          action: "my--look-and-feel#updateContrastOptions"
+          action: "my--look-and-feel#updateContrastOptions my--look-and-feel#applyThemeLive"
         }
       ) do |select|
         theme_options_for_select.each { |(label, value)| select.option(value:, label:) }
@@ -51,16 +51,19 @@ class My::LookAndFeelForm < ApplicationForm
       fg.check_box_group(data: { my__look_and_feel_target: "autoThemeContrast" }) do |group|
         group.check_box name: :force_light_theme_contrast,
                         label: attribute_name(:force_light_theme_contrast),
-                        caption: attribute_name(:force_light_theme_contrast_caption)
+                        caption: attribute_name(:force_light_theme_contrast_caption),
+                        data: { my__look_and_feel_target: "forceLightContrast", action: "my--look-and-feel#applyThemeLive" }
         group.check_box name: :force_dark_theme_contrast,
                         label: attribute_name(:force_dark_theme_contrast),
-                        caption: attribute_name(:force_dark_theme_contrast_caption)
+                        caption: attribute_name(:force_dark_theme_contrast_caption),
+                        data: { my__look_and_feel_target: "forceDarkContrast", action: "my--look-and-feel#applyThemeLive" }
       end
 
       fg.check_box_group(data: { my__look_and_feel_target: "singleThemeContrast" }) do |group|
         group.check_box name: :increase_theme_contrast,
                         label: attribute_name(:increase_contrast),
-                        caption: attribute_name(:increase_contrast_caption)
+                        caption: attribute_name(:increase_contrast_caption),
+                        data: { my__look_and_feel_target: "increaseContrast", action: "my--look-and-feel#applyThemeLive" }
       end
 
       fg.select_list(
@@ -79,17 +82,24 @@ class My::LookAndFeelForm < ApplicationForm
 
       # Added to allow user to set automatic collapse of hierarchy on load
       fg.check_box name: :collapse_hierarchy_on_load,
-             label: attribute_name(:collapse_hierarchy_on_load),
-             caption: attribute_name(:collapse_hierarchy_on_load_caption)
+                   label: attribute_name(:collapse_hierarchy_on_load),
+                   caption: attribute_name(:collapse_hierarchy_on_load_caption)
 
       # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
       fg.check_box name: :open_details_on_id_click,
-             label: attribute_name(:open_details_on_id_click),
-             caption: attribute_name(:open_details_on_id_click_caption)
+                   label: attribute_name(:open_details_on_id_click),
+                   caption: attribute_name(:open_details_on_id_click_caption)
 
-      fg.submit(name: :submit,
-                label: attribute_name(:button_update_look_and_feel),
-                scheme: :default)
+      # Added to allow the user to control whether hierarchy row collapse/expand state is
+      # remembered across visits. Kept as the last field in this form so the "reset
+      # remembered state" action (app/views/my/interface.html.erb, rendered right after
+      # this form closes) reads as belonging to it.
+      fg.check_box name: :remember_hierarchy_collapse_state,
+                   label: attribute_name(:remember_hierarchy_collapse_state),
+                   caption: attribute_name(:remember_hierarchy_collapse_state_caption)
+
+      # Added: every field in this form auto-saves on change (see the form's
+      # auto-submit wiring in app/views/my/interface.html.erb), so no submit button.
     end
   end
 

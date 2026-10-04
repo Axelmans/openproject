@@ -42,6 +42,8 @@ import {
   ApiV3FilterValueType,
   ApiV3Filter,
 } from 'core-app/shared/helpers/api-v3/api-v3-filter-builder';
+// Added to allow persisting per-user hierarchy row collapse state per work package list
+import { ApiV3ViewRowStates } from 'core-app/core/apiv3/endpoints/work_packages/apiv3-view-row-states';
 
 export class ApiV3WorkPackagesPaths extends ApiV3Collection<WorkPackageResource, ApiV3WorkPackagePaths, WorkPackageCache> {
   // Base path
@@ -177,4 +179,8 @@ export class ApiV3WorkPackagesPaths extends ApiV3Collection<WorkPackageResource,
 
   // /api/v3/(?:projectPath)/work_packages/(:workPackageId)/available_projects
   public readonly available_projects = this.subResource('available_projects');
+
+  // Added to allow persisting per-user hierarchy row collapse state per work package list
+  // /api/v3/(?:projectPath)/work_packages/view_row_states
+  public readonly view_row_states = this.subResource('view_row_states', ApiV3ViewRowStates);
 }

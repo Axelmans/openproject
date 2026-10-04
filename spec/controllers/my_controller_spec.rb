@@ -50,6 +50,21 @@ RSpec.describe MyController do
     end
   end
 
+  # Added to allow resetting a user's remembered hierarchy row collapse state for debugging
+  describe "DELETE reset_view_row_states" do
+    let!(:own_state) { create(:work_package_view_row_state, user:) }
+    let!(:other_users_state) { create(:work_package_view_row_state, user: create(:user)) }
+
+    it "deletes only the current user's view row states and redirects with see other" do
+      delete :reset_view_row_states
+
+      expect(response).to redirect_to(my_interface_path)
+      expect(response).to have_http_status(:see_other)
+      expect(WorkPackages::ViewRowState.exists?(own_state.id)).to be false
+      expect(WorkPackages::ViewRowState.exists?(other_users_state.id)).to be true
+    end
+  end
+
   describe "password change" do
     describe "security" do
       render_views

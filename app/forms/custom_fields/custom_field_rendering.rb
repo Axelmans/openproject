@@ -45,7 +45,7 @@ module CustomFields::CustomFieldRendering
   ).freeze
 
   MULTI_VALUE_INPUT_CLASS_NAMES = OpenProject::MultiKeyHash.expand(
-    %w[hierarchy weighted_item_list list] => "CustomFields::Inputs::MultiSelectList",
+    %w[hierarchy weighted_item_list list tags] => "CustomFields::Inputs::MultiSelectList",
     "user" => "CustomFields::Inputs::MultiUserSelectList",
     "version" => "CustomFields::Inputs::MultiVersionSelectList"
   ).freeze

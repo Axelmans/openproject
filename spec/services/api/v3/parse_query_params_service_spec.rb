@@ -318,6 +318,18 @@ RSpec.describe API::V3::ParseQueryParamsService,
       end
     end
 
+    context "with closedWorkPackagesLast" do
+      it_behaves_like "transforms" do
+        let(:params) { { closedWorkPackagesLast: "true" } }
+        let(:expected) { { closed_work_packages_last: true } }
+      end
+
+      it_behaves_like "transforms" do
+        let(:params) { { closedWorkPackagesLast: "false" } }
+        let(:expected) { { closed_work_packages_last: false } }
+      end
+    end
+
     context "with timelineLabels" do
       let(:input) { { left: "a", right: "b", farRight: "c" } }
 

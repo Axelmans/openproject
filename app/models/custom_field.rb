@@ -88,6 +88,9 @@ class CustomField < ApplicationRecord
   validates :has_comment, absence: true, unless: :can_have_comment?
 
   before_validation :check_searchability
+  # Added to allow a "tags" custom field type: unlike "list", multi_value is not a user
+  # choice for tags fields — it must always behave as multi-value.
+  before_validation :force_multi_value_for_tags
 
   after_destroy :destroy_help_text
 
@@ -101,8 +104,12 @@ class CustomField < ApplicationRecord
     true
   end
 
+  def force_multi_value_for_tags
+    self.multi_value = true if tags?
+  end
+
   def default_value # rubocop:disable Metrics/AbcSize,Metrics/PerceivedComplexity
-    if list?
+    if list? || tags?
       # Use loaded association data when available to avoid N+1 queries.
       # .where().pluck() always hits the database, bypassing eager-loaded data.
       ids = if custom_options.loaded?
@@ -174,7 +181,7 @@ class CustomField < ApplicationRecord
       possible_user_values_options(obj)
     when "version"
       possible_version_values_options(obj, options:)
-    when "list"
+    when "list", "tags"
       possible_list_values_options
     else
       possible_values
@@ -182,7 +189,7 @@ class CustomField < ApplicationRecord
   end
 
   def value_of(value)
-    if list?
+    if list? || tags?
       custom_options.where(value:).pick(:id)
     else
       CustomValue.new(custom_field: self, value:).valid? && value
@@ -200,7 +207,7 @@ class CustomField < ApplicationRecord
       possible_users(obj).pluck(:id).map(&:to_s)
     when "version"
       possible_versions(obj).pluck(:id).map(&:to_s)
-    when "list"
+    when "list", "tags"
       custom_options
     when "hierarchy", "weighted_item_list"
       custom_field_hierarchy_items
@@ -242,7 +249,7 @@ class CustomField < ApplicationRecord
     return if value.blank?
 
     case field_format
-    when "string", "text", "list", "link"
+    when "string", "text", "list", "tags", "link"
       value
     when "date"
       begin
@@ -339,6 +346,10 @@ class CustomField < ApplicationRecord
 
   def list?
     field_format == "list"
+  end
+
+  def tags?
+    field_format == "tags"
   end
 
   def user?

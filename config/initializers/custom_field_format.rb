@@ -54,6 +54,15 @@ OpenProject::CustomFieldFormat.tap do |formats|
                    order: 6,
                    multi_value_possible: true,
                    formatter: "CustomValue::ListStrategy")
+  # Added to allow a "tags" custom field type: a variant of "list" whose options can also be
+  # created inline by end users (not just pre-defined by an admin), rendered as pills.
+  formats.register("tags",
+                   label: :label_tags,
+                   only: %w(WorkPackage),
+                   edit_as: "list",
+                   order: 6.5,
+                   multi_value_possible: true,
+                   formatter: "CustomValue::ListStrategy")
   formats.register("date",
                    label: :label_date,
                    order: 7,

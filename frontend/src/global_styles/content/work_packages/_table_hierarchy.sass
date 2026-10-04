@@ -2,12 +2,14 @@
 // Style the hierarchy group indicator arrow
 // default: open arrow down
 // collapsed: right arrow
+// Muted at rest, full contrast on hover/focus - a calmer, less heavy tree indicator.
 .wp-table--hierarchy-indicator
-  color: var(--body-font-color)
+  color: var(--fgColor-muted)
   pointer-events: all
 
   &:hover
     text-decoration: none
+    color: var(--body-font-color)
 
 // Toggle the indicator accessibility texts
 // accordingly

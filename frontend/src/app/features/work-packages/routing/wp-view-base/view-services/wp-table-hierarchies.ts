@@ -33,6 +33,11 @@ export class WorkPackageViewHierarchies {
 
   public collapsed:Record<string, boolean> = {};
 
+  // Added to allow persisting per-user hierarchy row collapse state per work package list:
+  // ids the user explicitly toggled in this list, as opposed to ids collapsed by the
+  // "collapse hierarchy on load" fallback setting. Only these get persisted.
+  public explicit:Record<string, boolean> = {};
+
   constructor(visible:boolean) {
     this.isVisible = visible;
   }

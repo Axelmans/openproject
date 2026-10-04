@@ -56,6 +56,8 @@ class UpdateQueryFromParamsService
 
     apply_include_subprojects(params)
 
+    apply_closed_work_packages_last(params)
+
     apply_timestamps(params)
 
     disable_hierarchy_when_only_grouped_by(params)
@@ -121,6 +123,11 @@ class UpdateQueryFromParamsService
 
   def apply_include_subprojects(params)
     query.include_subprojects = params[:include_subprojects] if params.key?(:include_subprojects)
+  end
+
+  # Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
+  def apply_closed_work_packages_last(params)
+    query.closed_work_packages_last = params[:closed_work_packages_last] if params.key?(:closed_work_packages_last)
   end
 
   def apply_timestamps(params)

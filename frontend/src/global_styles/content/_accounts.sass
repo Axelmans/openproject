@@ -32,11 +32,46 @@
   width: 511px
   word-break: break-word
   background-color: var(--display-gray-bgColor-muted)
+  // Added for a softer, Linear-style floating card instead of a flat rectangle.
+  border-radius: var(--borderRadius-large)
+  box-shadow: var(--shadow-floating-small)
 
-  .login-form--footer
-    display: flex
-    justify-content: space-between
-    margin-bottom: 10px
+// Added: hide the "*" required-field marker on the login form specifically - it being a
+// login form, every field is obviously required, so the asterisk is just noise. The
+// underlying `required`/`aria-required` attributes (and therefore validation and
+// accessibility semantics) are untouched; this only hides the already-`aria-hidden`
+// decorative span Primer::Forms renders next to the label.
+#login-form, #nav-login-content
+  .FormControl-label span[aria-hidden="true"]
+    display: none
+
+// Added to allow the register/forgot-password links to sit centered at the
+// bottom of the login card (both the full page and the header pulldown),
+// below the auth-providers section, instead of crowding the login button
+// (Linear-style secondary links).
+.login-footer-links
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 0.5rem
+  margin-top: 1.5rem
+  padding-top: 1.5rem
+  font-size: 0.875rem
+  // Added: same divider style as the hr.form--separator under the "Aanmelden" title,
+  // to visually separate the footer links from the login button above them.
+  border-top: 1px solid var(--borderColor-default)
+
+  &--separator
+    color: var(--fgColor-muted)
+
+// Added: hide the "sign in with an existing account" section whenever the only entry in
+// it is the non-production "Omniauth Developer" testing convenience (not a real login
+// method for an actual visitor). Stays visible the moment a real provider is configured
+// alongside it, in any environment, so this never hides genuine SSO functionality.
+// Note: can't nest :has() inside :has() (invalid per the CSS spec, silently dropped by
+// the browser) - this flattens the check to a single :has() directly on the container.
+.login-auth-providers:not(:has(.auth-provider:not(.auth-provider-developer)))
+  display: none
 
 #content .login-auth-providers.wide
   width: auto

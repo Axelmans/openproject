@@ -47,14 +47,39 @@ See COPYRIGHT and LICENSE files for more details.
     scope: :pref,
     url: { action: "update_settings" },
     method: :patch,
-    data: { turbo: false, controller: "my--look-and-feel" }
+    data: { controller: "my--look-and-feel auto-submit", action: "change->auto-submit#submit" }
   ) do |form|
     render(My::LookAndFeelForm.new(form))
   end
 %>
 
+<%# Added: grouped directly under the "Remember expanded/collapsed rows" checkbox above
+    (the last field in My::LookAndFeelForm), since it acts on that same preference. Kept as
+    an explicit, confirmed action rather than folded into the auto-saving checkbox itself -
+    turning that preference off only stops remembering new changes, it does not by itself
+    delete what is already stored. No separate caption here: the checkbox's own caption
+    above already explains "remembering," and the confirm dialog explains the button's
+    effect at the point of action. %>
+<div style="margin: calc(-1 * var(--stack-gap-condensed, 8px)) 0 var(--stack-gap-normal, 24px) 1.75rem;">
+  <%=
+    render(
+      Primer::Beta::Button.new(
+        scheme: :danger,
+        tag: :a,
+        href: my_view_row_states_path,
+        data: { turbo_method: :delete, turbo_confirm: t("my_account.view_row_states.confirm") }
+      )
+    ) { t("my_account.view_row_states.button") }
+  %>
+</div>
+
 <%=
-  settings_primer_form_with(model: @user.pref, scope: :pref, url: { action: "update_settings" }, data: { turbo: false }) do |form|
+  settings_primer_form_with(
+    model: @user.pref,
+    scope: :pref,
+    url: { action: "update_settings" },
+    data: { controller: "auto-submit", action: "change->auto-submit#submit" }
+  ) do |form|
     render(My::AlertsForm.new(form))
   end
 %>

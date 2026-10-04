@@ -45,6 +45,8 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
     placeholder: this.I18n.t('js.placeholders.default'),
     // Added to allow explicitly adding a sort criterion via a button instead of an auto-appearing empty row
     add_criterion: this.I18n.t('js.filter.sorting.criteria.add'),
+    // Added to allow removing a sort criterion via an explicit delete button, matching the Filters tab
+    remove_criterion: this.I18n.t('js.button_delete'),
     // Added to allow closed work packages to be sorted to the bottom regardless of the chosen sort criteria
     closed_work_packages_last: this.I18n.t('js.filter.sorting.closed_work_packages_last'),
     sorting_mode: {
@@ -131,13 +133,13 @@ export class WpTableConfigurationSortByTabComponent implements TabComponent, OnI
   }
 
   public updateSelection(sort:SortModalObject, selected:string | null) {
-    const column = this.allColumns.find((c) => c.href === selected) ?? this.emptyColumn;
-    // Added to remove the row entirely when it's reset back to the placeholder, instead of leaving an empty row behind
-    if (column === this.emptyColumn) {
-      this.sortationObjects = this.sortationObjects.filter((object) => object !== sort);
-    } else {
-      sort.column = column;
-    }
+    sort.column = this.allColumns.find((c) => c.href === selected) ?? this.emptyColumn;
+    this.updateUsedColumns();
+  }
+
+  // Added to allow removing a sort criterion via an explicit delete button, matching the Filters tab
+  public removeSortCriterion(sort:SortModalObject) {
+    this.sortationObjects = this.sortationObjects.filter((object) => object !== sort);
     this.updateUsedColumns();
   }
 

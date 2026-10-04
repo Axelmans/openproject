@@ -634,4 +634,73 @@ RSpec.describe Query::Results do
       end
     end
   end
+
+  # Added to keep an ancestor and all of its descendants together as one contiguous block when
+  # sorting/paginating in hierarchy mode, instead of a flat closed_work_packages_last/id sort
+  # potentially scattering an open parent and its closed child onto different pages.
+  describe "#sorted_work_packages with show_hierarchies" do
+    let(:open_status) { create(:status, is_closed: false) }
+    let(:closed_status) { create(:closed_status) }
+
+    let(:closed_work_packages_last) { true }
+
+    let(:query) do
+      build(:query,
+            project: project1,
+            show_hierarchies: true,
+            sort_criteria: [%w(id asc)],
+            closed_work_packages_last:).tap { |q| q.filters = [] }
+    end
+
+    before do
+      login_as(user1)
+    end
+
+    subject { query_results.work_packages.to_a }
+
+    context "with an open parent and a closed child, and an unrelated open work package in between" do
+      let!(:parent) { create(:work_package, project: project1, status: open_status) }
+      let!(:unrelated_open) { create(:work_package, project: project1, status: open_status) }
+      let!(:child) { create(:work_package, project: project1, status: closed_status, parent:) }
+
+      it "keeps the parent and its closed child contiguous, ahead of the unrelated open work package" do
+        expect(subject).to eq [parent, child, unrelated_open]
+      end
+    end
+
+    context "with a multi-level family where a middle child is closed" do
+      let!(:root) { create(:work_package, project: project1, status: open_status) }
+      let!(:unrelated_root) { create(:work_package, project: project1, status: open_status) }
+      let!(:child) { create(:work_package, project: project1, status: closed_status, parent: root) }
+      let!(:grandchild) { create(:work_package, project: project1, status: open_status, parent: child) }
+
+      it "keeps the whole subtree, including the closed child, as one contiguous block" do
+        expect(subject).to eq [root, child, grandchild, unrelated_root]
+      end
+    end
+
+    context "when closed_work_packages_last is disabled" do
+      let(:closed_work_packages_last) { false }
+
+      let!(:parent) { create(:work_package, project: project1, status: open_status) }
+      let!(:unrelated_open) { create(:work_package, project: project1, status: open_status) }
+      let!(:child) { create(:work_package, project: project1, status: closed_status, parent:) }
+
+      it "still keeps the parent and child contiguous, ordered purely by id" do
+        expect(subject).to eq [parent, child, unrelated_open]
+      end
+    end
+
+    context "when near a pagination boundary" do
+      let!(:parent) { create(:work_package, project: project1, status: open_status) }
+      let!(:other_opens) { create_list(:work_package, 3, project: project1, status: open_status) }
+      let!(:child) { create(:work_package, project: project1, status: closed_status, parent:) }
+
+      it "keeps parent and child on the same page" do
+        first_page = subject.first(2)
+
+        expect(first_page).to include(parent, child)
+      end
+    end
+  end
 end

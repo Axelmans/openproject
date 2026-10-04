@@ -73,6 +73,13 @@ module AccountsHelper
     Footer.new(footer).to_html if footer
   end
 
+  # Added so the header's login dropdown can skip the login form itself while the full
+  # login page is already showing it (avoids the same username/password form appearing
+  # twice on screen at once).
+  def on_full_login_page?
+    !User.current.logged? && controller_name == "account" && action_name == "login"
+  end
+
   ##
   # Gets the registration footer in the given language from the settings.
   #

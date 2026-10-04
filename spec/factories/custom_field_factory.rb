@@ -162,6 +162,12 @@ FactoryBot.define do
       multi_value
     end
 
+    # Added to allow a "tags" custom field type: a variant of "list" whose options can also be
+    # created inline by end users, so - unlike :list - no possible_values are seeded here.
+    trait :tags do
+      field_format { "tags" }
+    end
+
     trait :version do
       field_format { "version" }
     end
@@ -271,6 +277,7 @@ FactoryBot.define do
         integer
         link
         list multi_list
+        tags
         weighted_item_list
         string
         text

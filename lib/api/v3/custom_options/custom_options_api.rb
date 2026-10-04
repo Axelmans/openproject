@@ -31,6 +31,11 @@ module API
     module CustomOptions
       class CustomOptionsAPI < ::API::OpenProjectAPI
         resources :custom_options do
+          # Added to allow end users to create new "tags" custom field options inline, from the
+          # work package edit form (see CustomOptions::CreateContract for the authorization and
+          # field-format restrictions this is gated behind).
+          post &::API::V3::Utilities::Endpoints::Create.new(model: CustomOption).mount
+
           namespace ":id" do
             params do
               requires :id, type: Integer

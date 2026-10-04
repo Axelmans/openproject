@@ -128,6 +128,26 @@ class UserPreference < ApplicationRecord
     settings[:collapse_hierarchy_on_load] = to_boolean(value)
   end
 
+  # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
+  def open_details_on_id_click?
+    settings.fetch(:open_details_on_id_click, false)
+  end
+
+  def open_details_on_id_click=(value)
+    settings[:open_details_on_id_click] = to_boolean(value)
+  end
+
+  # Added to allow the user to control whether hierarchy row collapse/expand state is
+  # remembered across visits. Defaults to true since that was the only behavior before
+  # this preference existed.
+  def remember_hierarchy_collapse_state?
+    settings.fetch(:remember_hierarchy_collapse_state, true)
+  end
+
+  def remember_hierarchy_collapse_state=(value)
+    settings[:remember_hierarchy_collapse_state] = to_boolean(value)
+  end
+
   # Provide an alias to form builders
   alias :comments_in_reverse_order :comments_in_reverse_order?
   alias :warn_on_leaving_unsaved :warn_on_leaving_unsaved?
@@ -135,6 +155,12 @@ class UserPreference < ApplicationRecord
   alias :disable_keyboard_shortcuts :disable_keyboard_shortcuts?
   # Added to allow user to set automatic collapse of hierarchy on load
   alias :collapse_hierarchy_on_load :collapse_hierarchy_on_load?
+  # Fixed: these two were previously defined after `private` below, which silently made
+  # their non-? alias private too - direct calls (as used by the form builder to read the
+  # checked state) fell through to method_missing's generic `settings[key]` (no default)
+  # instead of the real getter, instead of returning the correct default.
+  alias :open_details_on_id_click :open_details_on_id_click?
+  alias :remember_hierarchy_collapse_state :remember_hierarchy_collapse_state?
 
   def comments_in_reverse_order=(value)
     settings[:comments_sorting] = to_boolean(value) ? "desc" : "asc"
@@ -267,16 +293,5 @@ class UserPreference < ApplicationRecord
     first_day, last_day = date_range.split(" - ", 2)
     { "first_day" => first_day.presence, "last_day" => last_day.presence }
   end
-
-  # Added to allow the user to set whether clicking an issue ID opens a new page or opens the details view
-  def open_details_on_id_click?
-    settings.fetch(:open_details_on_id_click, false)
-  end
-
-  def open_details_on_id_click=(value)
-    settings[:open_details_on_id_click] = to_boolean(value)
-  end
-
-  alias :open_details_on_id_click :open_details_on_id_click?
 
 end

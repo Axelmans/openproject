@@ -1216,6 +1216,9 @@ Rails.application.routes.draw do
     patch "/my/non_participating", action: "update_non_participating"
     patch "/my/date_alerts", action: "update_date_alerts"
 
+    # Added to allow resetting a user's remembered hierarchy row collapse state for debugging
+    delete "/my/view_row_states", action: "reset_view_row_states", as: "my_view_row_states"
+
     get "/my/project_notifications/new", action: "new_project_settings", as: "new_my_project_settings"
     post "/my/project_notifications", action: "create_project_settings", as: "my_project_notifications"
     get "/my/project_notifications/:project_id/edit", action: "edit_project_settings", as: "edit_my_project_settings"

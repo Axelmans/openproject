@@ -41,6 +41,11 @@
   .inline-edit--display-field:not(.op-table-baseline--field)
     padding: 2px
 
+  // Added to give rows a calm, Linear-style hover highlight, since the table previously had
+  // no row-level hover feedback at all.
+  &:hover
+    background-color: var(--bgColor-muted)
+
 
 .wp-table--row,
 #empty-row-notification
@@ -121,6 +126,13 @@
   align-items: center
   justify-content: center
 
+// Added to keep the Sort by tab's per-row delete button shrink-to-content instead of
+// stretching like the sibling .form--field -full-width columns
+.sort-by--remove-criterion
+  flex: 0 0 auto
+  display: flex
+  align-items: center
+
 // Hide the context menu button outside mobile
 html:not(.-browser-mobile)
   .wp-table--context-menu-td
@@ -159,8 +171,13 @@ html:not(.-browser-mobile)
     display: block
     width: initial !important
 
+  // Added to allow the whole cell to be clickable, not just the rendered content's own
+  // box, which was inconsistently small for short values (status, priority, dates, avatars).
   .inline-edit--display-field
-    display: initial
+    display: flex
+    align-items: center
+    width: 100%
+    height: 100%
 
     &.bcfThumbnail
       outline: none
@@ -169,7 +186,7 @@ html:not(.-browser-mobile)
   @include unset-button-styles
   display: inline-block
   border: 1px solid transparent
-  border-radius: 2px
+  border-radius: var(--borderRadius-medium)
   overflow: visible
   width: 100%
 

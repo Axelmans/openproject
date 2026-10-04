@@ -64,6 +64,12 @@ module CustomFields
         CustomFields::Hierarchy::HierarchicalItemService.new.generate_root(cf)
       end
 
+      # Added to allow tags to be used on any work package type right away, without the
+      # manual per-type activation step other custom field formats require.
+      if cf.tags?
+        cf.update!(types: Type.all)
+      end
+
       call
     end
 

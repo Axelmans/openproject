@@ -92,7 +92,7 @@ module API
             format = filter.custom_field.field_format
 
             case format
-            when "list"
+            when "list", "tags"
               "API::V3::Queries::Schemas::CustomOptionFilterDependencyRepresenter"
             when "bool"
               "API::V3::Queries::Schemas::BooleanFilterDependencyRepresenter"

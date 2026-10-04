@@ -30,9 +30,9 @@ module API
   module V3
     module CustomOptions
       class CustomOptionRepresenter < ::API::Decorators::Single
-        self_link
+        include API::Decorators::LinkedResource
 
-        # TODO: add link to custom field once api for custom fields exists
+        self_link
 
         def _type
           "CustomOption"
@@ -41,6 +41,27 @@ module API
         property :id
 
         property :value
+
+        # Added to allow creating new "tags" custom options inline (POST /api/v3/custom_options),
+        # which needs a way to specify which custom field the new option belongs to.
+        resource_link :customField,
+                      getter: ->(*) {
+                        next unless represented.custom_field_id
+
+                        {
+                          href: api_v3_paths.custom_field(represented.custom_field_id),
+                          title: represented.custom_field&.name
+                        }
+                      },
+                      setter: ->(fragment:, **) {
+                        next unless fragment
+
+                        represented.custom_field_id = ::API::Utilities::ResourceLinkParser
+                                                       .parse_id fragment["href"],
+                                                                 property: "customField",
+                                                                 expected_version: "3",
+                                                                 expected_namespace: "custom_fields"
+                      }
       end
     end
   end

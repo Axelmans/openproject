@@ -1,0 +1,41 @@
+//-- copyright
+// OpenProject is an open source project management software.
+// Copyright (C) the OpenProject GmbH
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License version 3.
+//
+// OpenProject is a fork of ChiliProject, which is a fork of Redmine. The copyright follows:
+// Copyright (C) 2006-2013 Jean-Philippe Lang
+// Copyright (C) 2010-2013 the ChiliProject Team
+//
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+//
+// See COPYRIGHT and LICENSE files for more details.
+//++
+
+// Added to establish a calmer, Linear-inspired visual foundation on top of Primer's default
+// tokens: tighter large-container corners and flatter, less diffuse shadows. Shadow colors are
+// derived from --fgColor-default via color-mix() instead of hardcoded hex values, so they
+// automatically stay correct across light/dark/high-contrast themes without a separate block
+// per theme.
+:root
+  --borderRadius-large: 0.5rem
+
+  --shadow-resting-xsmall: 0 1px 2px 0 color-mix(in srgb, var(--fgColor-default) 6%, transparent)
+  --shadow-resting-small: 0 1px 2px 0 color-mix(in srgb, var(--fgColor-default) 7%, transparent), 0 1px 1px 0 color-mix(in srgb, var(--fgColor-default) 5%, transparent)
+  --shadow-resting-medium: 0 1px 2px 0 color-mix(in srgb, var(--fgColor-default) 8%, transparent), 0 2px 4px 0 color-mix(in srgb, var(--fgColor-default) 6%, transparent)
+  --shadow-floating-small: 0 0 0 1px var(--borderColor-default), 0 4px 10px -2px color-mix(in srgb, var(--fgColor-default) 10%, transparent)
+  --shadow-floating-medium: 0 0 0 1px var(--borderColor-default), 0 8px 20px -6px color-mix(in srgb, var(--fgColor-default) 12%, transparent)
