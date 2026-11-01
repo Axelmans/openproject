@@ -33,16 +33,22 @@ module WorkPackages
     # Finds or creates the ViewRowState row for a (user, scope) and
     # full-replaces its collapsed map, pruning ids of work packages that no
     # longer exist.
+    #
+    # Changed: the update is partial - only the given attributes (collapsed and/or
+    # column_widths; nil = leave untouched) are replaced, so saving column widths does not
+    # wipe the collapse state and vice versa.
     class UpsertService
       def initialize(user:)
         @user = user
       end
 
-      def call(query: nil, project: nil, collapsed: {})
+      def call(query: nil, project: nil, collapsed: nil, column_widths: nil)
         project = nil if query
 
         record = WorkPackages::ViewRowState.find_or_initialize_by(user: @user, query:, project:)
-        record.collapsed = WorkPackages::ViewRowState.prune(collapsed)
+        record.collapsed = WorkPackages::ViewRowState.prune(collapsed) unless collapsed.nil?
+        # Added to allow persisting per-user column widths
+        record.column_widths = WorkPackages::ViewRowState.sanitize_widths(column_widths) unless column_widths.nil?
         record.save!
 
         record

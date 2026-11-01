@@ -131,13 +131,13 @@
   }
 
   <div class="advanced-filters--remove-filter">
-    <button
-      type="button"
-      class="spot-link"
-      [title]="text.button_delete"
-      (click)="removeThisFilter()"
-      >
-      <op-icon icon-classes="icon-close advanced-filters--remove-filter-icon" />
-    </button>
+    <!-- Changed to match the fieldset's own close button (primer-icon-button), instead of
+         a legacy spot-link + icon-font button - same panel, same visual language. -->
+    <primer-icon-button
+      icon="x"
+      scheme="invisible"
+      [label]="text.button_delete"
+      (clicked)="removeThisFilter()"
+    />
   </div>
 </ng-container>

@@ -51,11 +51,18 @@ export class UserEditFieldComponent extends EditFieldComponent implements OnInit
 
   url:string;
 
+  // Added to allow unassigning via an explicit "Unassign" action in the dropdown footer
+  // (next to "Invite"), which is more discoverable than only the small clear (×) icon.
+  // Only offered for optional fields that currently have a value.
+  unassignable = false;
+
   initialize():void {
     const link = this.schema.allowedValues as CallableHalLink|undefined;
     if (link) {
       this.url = link.$link.href!;
     }
+
+    this.unassignable = !this.schema.required && !!this.value;
   }
 
   public onModelChange(user?:IUserAutocompleteItem):unknown {

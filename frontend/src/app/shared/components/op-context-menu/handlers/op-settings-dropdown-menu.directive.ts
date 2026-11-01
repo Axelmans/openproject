@@ -213,6 +213,11 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
     const hasSelection = selectedWorkPackages.length > 0;
     this.items = [
       {
+        isHeader: true,
+        linkText: this.I18n.t('js.toolbar.settings.section_view'),
+        hidden: this.hideTableOptions,
+      },
+      {
         // Configuration modal
         disabled: false,
         linkText: this.I18n.t('js.toolbar.settings.configure_view'),
@@ -268,6 +273,17 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
           );
           return true;
         },
+      },
+      {
+        // Added: visually separate view-configuration items (above) from query/page
+        // management items (below) - no item removed/reordered/renamed, purely a grouping
+        // aid for a menu that previously read as one flat list of ~9 unrelated actions.
+        divider: true,
+        hidden: this.hideTableOptions,
+      },
+      {
+        isHeader: true,
+        linkText: this.I18n.t('js.toolbar.settings.section_manage'),
       },
       {
         // Rename query shortcut
@@ -333,6 +349,15 @@ export class OpSettingsMenuDirective extends OpContextMenuTrigger implements Aft
           }
           return true;
         },
+      },
+      {
+        // Added: separate query/page-management actions (above) from sharing/export
+        // actions (below), same reasoning as the earlier divider.
+        divider: true,
+      },
+      {
+        isHeader: true,
+        linkText: this.I18n.t('js.toolbar.settings.section_share_export'),
       },
       {
         // Calendar sharing modal

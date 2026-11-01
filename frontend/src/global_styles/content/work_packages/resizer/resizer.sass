@@ -4,8 +4,16 @@
   bottom: 0
   height: 100%
   cursor: col-resize
-  color: var(--light-gray)
+  // Changed from the legacy, non-theme-adaptive --light-gray (#CCCCCC, barely visible in
+  // light theme, too stark in dark theme) to the same muted/default pairing used for the
+  // table column headers (Fase 1), so the grip glyph (from the icon-resizer-vertical-lines
+  // class already applied alongside this one) reads consistently in both themes and
+  // brightens on hover like other interactive affordances this session.
+  color: var(--fgColor-muted)
   font-size: 14px
+
+  &:hover
+    color: var(--fgColor-default)
 
   &:before
     position: relative

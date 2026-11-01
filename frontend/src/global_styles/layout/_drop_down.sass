@@ -48,7 +48,9 @@
 .drop-down .menu-drop-down-container
   list-style: none
   background: var(--overlay-bgColor)
-  border-radius: 0
+  // Changed from a hardcoded 0 (square corners, inconsistent with the rest of the app's
+  // --borderRadius-medium rollout, including the Primer-based dropdowns right next to it).
+  border-radius: var(--borderRadius-medium)
   box-shadow: var(--shadow-floating-medium)
   overflow: visible
   padding: 3px 0
@@ -95,6 +97,19 @@
 
     .no-icon
       margin-left: 19.09px //for whatever reasons it is the right dimension
+
+  // Added: the menu items span edge-to-edge, so now that the container itself has rounded
+  // corners, the first/last item's own (square) hover background would otherwise poke out
+  // past the curve. Round those two corners to match.
+  LI:first-child > A,
+  LI:first-child > .menu-item
+    border-top-left-radius: var(--borderRadius-medium)
+    border-top-right-radius: var(--borderRadius-medium)
+
+  LI:last-child > A,
+  LI:last-child > .menu-item
+    border-bottom-left-radius: var(--borderRadius-medium)
+    border-bottom-right-radius: var(--borderRadius-medium)
 
   LI > .inactive
     color: var(--fgColor-muted)
@@ -144,9 +159,20 @@
 
 .dropdown .dropdown-menu .dropdown-divider
   font-size: 1px
-  border-top: solid 1px #E5E5E5
+  // Changed from a hardcoded hex (invisible/wrong in dark theme) to a theme token.
+  border-top: solid 1px var(--borderColor-default)
   padding: 0
   margin: 3px 0
+
+// Added: minimal styling for the previously-unstyled section-label item type
+// (op-context-menu.html's isHeader), used to group the settings/"..." dropdown's
+// ~9 actions into labeled sections instead of one flat list.
+.op-menu--headline
+  display: block
+  padding: 6px 10px 2px
+  font-size: 0.75rem
+  font-weight: var(--base-text-weight-medium)
+  color: var(--fgColor-muted)
 
 /* Icon Examples - icons courtesy of http://p.yusukekamiyamane.com/ */
 .dropdown.has-icons LI > A

@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, inject } from '@angular/core';
 import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destroyed.mixin';
 import { PaginationInstance } from 'core-app/shared/components/table-pagination/pagination-instance';
@@ -42,6 +42,8 @@ export class TablePaginationComponent extends UntilDestroyedMixin implements OnI
   protected paginationService = inject(PaginationService);
   protected cdRef = inject(ChangeDetectorRef);
   protected I18n = inject(I18nService);
+  // Added to allow closing the page jump popover when clicking outside of it
+  protected elementRef = inject(ElementRef);
 
   @Input() totalEntries:string;
 
@@ -67,6 +69,10 @@ export class TablePaginationComponent extends UntilDestroyedMixin implements OnI
     per_page_navigation: this.I18n.t('js.pagination.per_page_navigation'),
     page_number: (num:number) => this.I18n.t('js.pagination.pages.page_number', { number: num }),
     show_per_page: (num:number) => this.I18n.t('js.pagination.pages.show_per_page', { number: num }),
+    // Added to allow labelling the clickable ellipsis and its page jump popover
+    show_skipped_pages: (from:number, to:number) => this.I18n.t('js.pagination.show_skipped_pages', { from, to }),
+    go_to_page: this.I18n.t('js.pagination.go_to_page'),
+    go: this.I18n.t('js.pagination.go'),
   };
 
   public currentRange = '';
@@ -78,6 +84,15 @@ export class TablePaginationComponent extends UntilDestroyedMixin implements OnI
   public prePageNumbers:number[] = [];
 
   public perPageOptions:number[] = [];
+
+  // Added to allow jumping to pages hidden behind the "…" via a small popover
+  public totalPages = 0;
+
+  public preSkippedPages:number[] = [];
+
+  public postSkippedPages:number[] = [];
+
+  public openGap:'pre'|'post'|null = null;
 
   ngOnInit():void {
     const paginationOptions = this.paginationService.getPaginationOptions();
@@ -141,6 +156,8 @@ export class TablePaginationComponent extends UntilDestroyedMixin implements OnI
     if (!this.showPageSelections) {
       this.pageNumbers = [];
       this.postPageNumbers = [];
+      this.preSkippedPages = [];
+      this.postSkippedPages = [];
       return;
     }
 
@@ -177,6 +194,85 @@ export class TablePaginationComponent extends UntilDestroyedMixin implements OnI
     }
 
     this.pageNumbers = pageNumbers;
+    this.updateSkippedPages();
+  }
+
+  /**
+   * Added to allow the "…" to only show up when pages are actually skipped,
+   * and to know which pages to offer in the page jump popover.
+   */
+  private updateSkippedPages() {
+    const { perPage, total } = this.pagination;
+    this.totalPages = perPage ? Math.ceil(total / perPage) : 0;
+
+    const firstVisible = this.pageNumbers[0];
+    const lastVisible = this.pageNumbers[this.pageNumbers.length - 1];
+
+    this.preSkippedPages = this.prePageNumbers.length > 0 && firstVisible
+      ? this.range(this.prePageNumbers[this.prePageNumbers.length - 1] + 1, firstVisible - 1)
+      : [];
+
+    const postEnd = this.postPageNumbers.length > 0 ? this.postPageNumbers[0] - 1 : this.totalPages;
+    this.postSkippedPages = lastVisible ? this.range(lastVisible + 1, postEnd) : [];
+
+    if ((this.openGap === 'pre' && !this.preSkippedPages.length) || (this.openGap === 'post' && !this.postSkippedPages.length)) {
+      this.openGap = null;
+    }
+  }
+
+  private range(from:number, to:number):number[] {
+    const result:number[] = [];
+    for (let i = from; i <= to; i++) {
+      result.push(i);
+    }
+    return result;
+  }
+
+  // Added to allow opening/closing the page jump popover of an ellipsis
+  public toggleGap(gap:'pre'|'post') {
+    this.openGap = this.openGap === gap ? null : gap;
+    this.cdRef.detectChanges();
+  }
+
+  public closeGap() {
+    if (this.openGap) {
+      this.openGap = null;
+      this.cdRef.detectChanges();
+    }
+  }
+
+  // Added to allow jumping to an arbitrary page from the popover (clamped to the existing pages)
+  public jumpTo(page:number|string) {
+    const parsed = typeof page === 'number' ? page : parseInt(page, 10);
+    if (Number.isNaN(parsed) || this.totalPages < 1) {
+      return;
+    }
+
+    const target = Math.min(Math.max(parsed, 1), this.totalPages);
+    this.openGap = null;
+    if (target !== this.pagination.page) {
+      this.showPage(target);
+    } else {
+      this.cdRef.detectChanges();
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  public onDocumentClick(event:MouseEvent) {
+    if (!this.openGap) {
+      return;
+    }
+
+    const target = event.target as HTMLElement|null;
+    const gap = target?.closest('.op-pagination--gap');
+    if (!gap || !(this.elementRef.nativeElement as HTMLElement).contains(gap)) {
+      this.closeGap();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  public onEscape() {
+    this.closeGap();
   }
 
   public showPerPageOptions() {

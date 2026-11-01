@@ -37,6 +37,7 @@ import { CurrentUserService } from 'core-app/core/current-user/current-user.serv
 import { QueryFilterInstanceResource } from 'core-app/features/hal/resources/query-filter-instance-resource';
 import { HalResourceService } from 'core-app/features/hal/services/hal-resource.service';
 import { compareByHref } from 'core-app/shared/helpers/angular/tracking-functions';
+import { Highlighting } from 'core-app/features/work-packages/components/wp-fast-table/builders/highlighting/highlighting.functions';
 
 @Component({
   selector: 'op-filter-toggled-multiselect-value',
@@ -84,6 +85,13 @@ export class FilterToggledMultiselectValueComponent implements OnInit, AfterView
 
   public get value():unknown[] {
     return this.filter.values;
+  }
+
+  // Added to allow types, priorities and statuses in filter values to look like they do in
+  // the table (type colour/uppercase, priority/status dot), both in the dropdown and in the
+  // selected chips. Returns null for other resources (users, versions, ...).
+  public highlightClass(item:HalResource|null|undefined):string|null {
+    return Highlighting.inlineClassForResource(item);
   }
 
   public setValues(val:HalResource[]|string[]|string|HalResource):void {

@@ -124,4 +124,21 @@ RSpec.describe WorkPackages::ViewRowState do
       expect(described_class.prune({})).to eq({})
     end
   end
+
+  # Added to allow persisting per-user column widths
+  describe ".sanitize_widths" do
+    it "keeps integer widths and clamps them to the allowed bounds" do
+      expect(described_class.sanitize_widths("status" => "150", "type" => 5, "subject" => 99_999))
+        .to eq("status" => 150, "type" => 40, "subject" => 2000)
+    end
+
+    it "drops blank keys and non-numeric widths" do
+      expect(described_class.sanitize_widths("" => 100, "status" => "abc")).to eq({})
+    end
+
+    it "returns an empty hash for input that is not a map" do
+      expect(described_class.sanitize_widths(nil)).to eq({})
+      expect(described_class.sanitize_widths([1, 2])).to eq({})
+    end
+  end
 end

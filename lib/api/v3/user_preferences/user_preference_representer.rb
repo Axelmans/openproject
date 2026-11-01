@@ -66,6 +66,8 @@ module API
         # Added to allow the user to control whether hierarchy row collapse/expand state
         # is remembered across visits
         property :remember_hierarchy_collapse_state
+        # Added to allow the user to personally hide Enterprise-edition upsell hints
+        property :hide_enterprise_banners
         property :comments_in_reverse_order,
                  as: :commentSortDescending
         property :auto_hide_popups

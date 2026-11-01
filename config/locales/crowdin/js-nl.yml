@@ -520,6 +520,8 @@ nl:
     label_no_start_date: geen startdatum
     label_no_value: Geen waarde
     label_none: geen
+    # Added to allow an explicit "unassign" option in user dropdowns (assignee etc.)
+    label_unassign: Niet meer toewijzen
     label_not_available: Not available
     label_not_contains: bevat geen
     label_not_equals: is niet
@@ -716,6 +718,9 @@ nl:
         page_number: Page %{number}
         show_per_page: Show %{number} per page
       pages_skipped: Pages skipped.
+      show_skipped_pages: "Pagina's %{from}–%{to} tonen"
+      go_to_page: "Ga naar pagina"
+      go: "Ga"
       per_page_navigation: Items per page selection
     placeholders:
       default: "-"
@@ -854,6 +859,9 @@ nl:
         page_settings: Hernoem weergave
         save: Opslaan
         save_as: Opslaan als
+        section_manage: Beheren
+        section_share_export: Delen en exporteren
+        section_view: Weergave
         share_calendar: Abonneren op agenda
         sort_by: Sorteer op
         visibility_settings: Zichtbaarheidsinstellingen
@@ -931,6 +939,10 @@ nl:
         header_with_parent: 'Nieuw %{type} (Kind van %{parent_type} #%{id})'
         title: Nieuw werkpakket
       default_queries:
+        # Added to allow the new default views in the work packages menu
+        all_closed: Alles gesloten
+        due_soon: Binnenkort te laat
+        watched_by_me: Door mij gevolgd
         all_open: Alles open
         assigned_to_me: Toegewezen aan mij
         created_by_me: Gemaakt door mijzelf
@@ -1072,6 +1084,8 @@ nl:
         show_all_users: Show all users with whom the work package has been shared with
         title: Werkpakket delen
       table:
+        # Added to allow resizing columns of the work package table
+        resize_column: Kolombreedte aanpassen (dubbelklik om te herstellen)
         configure_button: Configureer werkpakkettabel
         summary: Tabel met rijen van werkpakket en kolommen werk pakket kenmerken.
         text_inline_edit: De meeste cellen van deze tabel zijn knoppen die de inline-bewerken functionaliteit van dat kenmerk te activeren.

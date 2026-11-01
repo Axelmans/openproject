@@ -31,6 +31,8 @@
 module WorkPackages
   # Persists, per (user, work package list), which hierarchy rows the user has
   # explicitly expanded/collapsed, so the state survives between visits.
+  # Also stores the user's custom table column widths for that same list
+  # (column_widths: column id => width in px).
   #
   # A "work package list" is one of:
   #   - a saved Query (query set, project irrelevant)
@@ -63,6 +65,29 @@ module WorkPackages
 
       existing_ids = WorkPackage.where(id: collapsed.keys).pluck(:id).map(&:to_s)
       collapsed.slice(*existing_ids)
+    end
+
+    # Added to allow persisting per-user column widths: bounds of accepted widths in px
+    MIN_COLUMN_WIDTH = 40
+    MAX_COLUMN_WIDTH = 2000
+    MAX_COLUMN_WIDTH_ENTRIES = 100
+
+    # Added to allow persisting per-user column widths.
+    # Keeps only string keys with integer widths within bounds, so arbitrary client
+    # input cannot bloat the jsonb column or produce unusable widths.
+    def self.sanitize_widths(widths)
+      return {} unless widths.respond_to?(:each_pair)
+
+      widths
+        .each_pair
+        .filter_map do |key, value|
+          width = Integer(value, exception: false)
+          next if key.blank? || width.nil?
+
+          [key.to_s, width.clamp(MIN_COLUMN_WIDTH, MAX_COLUMN_WIDTH)]
+        end
+        .first(MAX_COLUMN_WIDTH_ENTRIES)
+        .to_h
     end
 
     private

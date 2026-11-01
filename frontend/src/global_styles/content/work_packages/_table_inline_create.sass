@@ -7,6 +7,44 @@
   td
     padding: 0 !important
 
+// Added to allow "Create new work package" (and "reference existing") to be a real,
+// full-width button below the last row instead of a small text link: dashed outline,
+// centered muted label, accent colour on hover (Linear-style "add row").
+.wp-inline-create-button-row .wp-inline-create-button-td
+  padding-top: var(--base-size-8, 8px) !important
+
+.wp-inline-create-button-wrapper
+  display: flex
+  gap: var(--base-size-8, 8px)
+
+  > button.spot-link
+    flex: 1 1 0
+    // Spacing between split buttons comes from the wrapper's gap (overrides the
+    // margin-right in _table_embedded.sass)
+    margin: 0 !important
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    gap: var(--base-size-4, 4px)
+    height: var(--table-timeline--row-height, 36px)
+    border: 1px dashed var(--borderColor-default)
+    border-radius: var(--borderRadius-medium)
+    background: transparent
+    color: var(--fgColor-muted)
+    text-decoration: none
+    cursor: pointer
+    transition: background-color 0.1s ease, color 0.1s ease, border-color 0.1s ease
+
+    svg
+      fill: currentColor
+
+    &:hover,
+    &:focus-visible
+      background-color: var(--bgColor-muted)
+      border-color: var(--fgColor-accent)
+      color: var(--fgColor-accent)
+      text-decoration: none
+
 .wp-inline-create-button
   a,button
     padding: 0.5rem 0
@@ -14,10 +52,13 @@
     line-height: 1.6
 
 .wp-inline-create-row
-  background: var(--display-green-bgColor-muted)
+  // Changed from green/pine to an indigo tint, consistent with the purple accent used
+  // app-wide (there's no non-muted purple/indigo background token, so the hover state is
+  // mixed in rather than swapping to a second, unrelated display color).
+  background: var(--display-indigo-bgColor-muted)
 
   &:hover
-    background: var(--display-pine-bgColor-muted)
+    background: color-mix(in srgb, var(--display-indigo-bgColor-muted) 85%, var(--fgColor-default) 15%)
 
 .wp-table--cancel-create-td
   text-align: center !important

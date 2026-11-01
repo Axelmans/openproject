@@ -1,5 +1,22 @@
 @import '../../global_styles/openproject/variables'
 
+// Added to allow the avatar and name of the selected principal to sit on one line,
+// with the name truncated (not the avatar) when the field is narrow.
+.op-user-autocompleter--label
+  display: inline-flex
+  align-items: center
+  gap: var(--base-size-4, 4px)
+  max-width: 100%
+  min-width: 0
+
+  op-principal
+    flex-shrink: 0
+
+.op-user-autocompleter--label-name
+  overflow: hidden
+  text-overflow: ellipsis
+  white-space: nowrap
+
 .op-autocompleter
   &__option-principal-email
     color: var(--fgColor-muted)

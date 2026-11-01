@@ -60,7 +60,11 @@ export class WorkPackageShareButtonComponent extends UntilDestroyedMixin impleme
 
   @Input() public workPackage:WorkPackageResource;
 
-  showEnterpriseIcon = !this.bannersService.allowsTo('work_package_sharing');
+  // Changed from a plain `!allowsTo(...)` check to `showBannerFor(...)`, so this badge also
+  // respects the "hide enterprise banners" preference (which, like the instance-wide
+  // ee_hide_banners setting, is surfaced to the frontend via the `ee-banners-hidden` body
+  // class that BannersService reads) instead of only reflecting raw feature availability.
+  showEnterpriseIcon = this.bannersService.showBannerFor('work_package_sharing');
 
   shareCount$:Observable<number>;
 

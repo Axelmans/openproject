@@ -87,3 +87,12 @@ bundle exec lefthook install
 - `docs/development/code-review-guidelines/` — Code review standards
 - `CONTRIBUTING.md` — Contribution workflow
 - `.github/copilot-instructions.md` — Extended agent instructions with troubleshooting
+
+## Commenting
+
+-When adding or altering code, always include a comment stating what was added/changed, and if useful, why
+
+## UI Reworking
+
+-Use the Linear app as design reference (shapes, colours, visualisations, ...): https://linear.app/
+-Do NOT run visual verifications or tests, this should be done by the developer

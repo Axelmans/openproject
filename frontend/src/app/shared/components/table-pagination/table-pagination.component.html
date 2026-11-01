@@ -26,10 +26,7 @@
               ></button>
             </li>
           }
-          <li class="op-pagination--space">
-            <span class="sr-only" [textContent]="text.pages_skipped"></span>
-            <span aria-hidden="true">…</span>
-          </li>
+          <ng-container *ngTemplateOutlet="gapTpl; context: { $implicit: preSkippedPages, gap: 'pre' }" />
         }
         @if (pageNumbers.length > 1) {
           @for (pageNumber of pageNumbers; track pageNumber) {
@@ -37,7 +34,9 @@
               [ngClass]="{ 'op-pagination--item_current': pageNumber === pagination.page }"
               class="op-pagination--item">
               @if (pageNumber === pagination.page) {
+                <!-- Added to allow the current page to be shown in the same box as the other pages, highlighted in the primary colour -->
                 <em
+                  class="op-pagination--item-link op-pagination--item-link_current"
                   [attr.aria-label]="text.page_number(pageNumber)"
                   aria-current="page"
                   tabindex="0">
@@ -56,10 +55,7 @@
               }
             </li>
           }
-          <li class="op-pagination--space">
-            <span class="sr-only" [textContent]="text.pages_skipped"></span>
-            <span aria-hidden="true">…</span>
-          </li>
+          <ng-container *ngTemplateOutlet="gapTpl; context: { $implicit: postSkippedPages, gap: 'post' }" />
         }
         @if (postPageNumbers.length) {
           @for (pageNumber of postPageNumbers; track pageNumber) {
@@ -144,3 +140,57 @@
     }
   </div>
 }
+
+<!-- Added to allow clicking the ellipsis to pick any of the skipped pages -->
+<ng-template #gapTpl let-pages let-gap="gap">
+  @if (pages.length) {
+    <li class="op-pagination--space op-pagination--gap">
+      <button
+        class="op-pagination--gap-trigger"
+        type="button"
+        aria-haspopup="dialog"
+        [attr.aria-expanded]="openGap === gap"
+        [attr.aria-label]="text.show_skipped_pages(pages[0], pages[pages.length - 1])"
+        [attr.title]="text.show_skipped_pages(pages[0], pages[pages.length - 1])"
+        (click)="toggleGap(gap)">
+        <span class="sr-only" [textContent]="text.pages_skipped"></span>
+        <span aria-hidden="true">…</span>
+      </button>
+      @if (openGap === gap) {
+        <div
+          class="op-pagination--popover"
+          role="dialog"
+          [attr.aria-label]="text.show_skipped_pages(pages[0], pages[pages.length - 1])">
+          <div class="op-pagination--popover-grid">
+            @for (pageNumber of pages; track pageNumber) {
+              <button
+                class="op-pagination--popover-page"
+                type="button"
+                (click)="jumpTo(pageNumber)"
+                [attr.aria-label]="text.page_number(pageNumber)"
+                [textContent]="pageNumber"
+              ></button>
+            }
+          </div>
+          <div class="op-pagination--popover-jump">
+            <input
+              #jumpInput
+              class="op-pagination--popover-input"
+              type="number"
+              min="1"
+              [attr.max]="totalPages"
+              [attr.placeholder]="text.go_to_page"
+              [attr.aria-label]="text.go_to_page"
+              (keydown.enter)="jumpTo(jumpInput.value)" />
+            <button
+              class="op-pagination--popover-go"
+              type="button"
+              (click)="jumpTo(jumpInput.value)"
+              [textContent]="text.go"
+            ></button>
+          </div>
+        </div>
+      }
+    </li>
+  }
+</ng-template>

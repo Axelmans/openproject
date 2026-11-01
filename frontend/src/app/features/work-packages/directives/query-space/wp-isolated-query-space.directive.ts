@@ -43,6 +43,8 @@ import {
 import {
   WorkPackageViewHierarchiesService,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy.service';
+// Added to allow resizing columns of the work package table
+import { WorkPackageViewColumnWidthsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-column-widths.service';
 import {
   WorkPackageViewSortByService,
 } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
@@ -161,6 +163,8 @@ import {
     WorkPackageViewGroupByService,
     WorkPackageViewCollapsedGroupsService,
     WorkPackageViewHierarchiesService,
+    // Added to allow resizing columns of the work package table
+    WorkPackageViewColumnWidthsService,
     WorkPackageViewSortByService,
     WorkPackageViewColumnsService,
     WorkPackageViewFiltersService,

@@ -23,10 +23,55 @@
     >{{ item.email }}</span>
   }
 </ng-template>
-@if (inviteUserToProject) {
+<!-- Added to allow the selected principal to keep its avatar while editing (e.g. assignee
+     in the work package table); the default label only rendered the name. The clear icon
+     markup mirrors the default label in op-autocompleter.component.html. -->
+<ng-template
+  #labelTemplate
+  let-item
+  let-search="search"
+  let-clear="clear"
+  >
+  @if (!item.disabled) {
+    <span class="ng-value-icon left"
+          tabindex="0"
+          (click)="clear(item)"
+          (keydown.enter)="$event.preventDefault(); clear(item)"
+          (keydown.space)="$event.preventDefault(); clear(item)">×</span>
+  }
+  <span class="ng-value-label op-user-autocompleter--label">
+    @if (item && item.href) {
+      <op-principal [principal]="item"
+        [hideName]="true"
+        [hoverCard]="false"
+        size="mini"
+       />
+    }
+    <span class="op-user-autocompleter--label-name">{{ item.name }}</span>
+  </span>
+</ng-template>
+<!-- Changed: the footer is also rendered for an "Unassign" action (placed before "Invite",
+     same look), not only when inviting users is possible -->
+@if (inviteUserToProject || unassignable) {
   <ng-template #footerTemplate>
-    <op-invite-user-button [projectId]="inviteUserToProject"
-      class="op-select-footer"
-     />
+    @if (unassignable) {
+      <div class="op-select-footer">
+        <button
+          class="op-select-footer--label"
+          type="button"
+          (click)="onUnassignClick($event)"
+          >
+          <span class="icon-context">
+            <op-icon icon-classes="icon-user-minus icon-context" />
+            {{ text.unassign }}
+          </span>
+        </button>
+      </div>
+    }
+    @if (inviteUserToProject) {
+      <op-invite-user-button [projectId]="inviteUserToProject"
+        class="op-select-footer"
+       />
+    }
   </ng-template>
 }

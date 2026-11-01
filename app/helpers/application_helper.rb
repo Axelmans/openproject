@@ -228,7 +228,11 @@ module ApplicationHelper
       css << "action-#{action_name}"
     end
 
-    if EnterpriseToken.hide_banners?
+    # Added: also hide banners when the current user personally opted to (in addition to
+    # the instance-wide EnterpriseToken.hide_banners? config) - the frontend BannersService
+    # already treats this class as "don't show any banner", so this is the only change
+    # needed to make that existing mechanism respect the new per-user preference too.
+    if EnterpriseToken.hide_banners? || User.current.pref.hide_enterprise_banners?
       css << "ee-banners-hidden"
     end
 

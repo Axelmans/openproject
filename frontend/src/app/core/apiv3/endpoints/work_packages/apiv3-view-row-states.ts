@@ -36,14 +36,32 @@ export interface ViewRowStateScope {
   projectId?:string|null;
 }
 
+// Added to allow partial updates of the per-user view state (collapse state, column widths)
+export interface ViewRowStateChanges {
+  collapsed?:Record<string, boolean>;
+  columnWidths?:Record<string, number>;
+}
+
 // Added to allow persisting per-user hierarchy row collapse state per work package list
 export class ApiV3ViewRowStates extends ApiV3ResourcePath {
   public get(scope:ViewRowStateScope):Observable<HalResource> {
     return this.halResourceService.get(this.scopedPath(scope));
   }
 
-  public patch(scope:ViewRowStateScope, collapsed:Record<string, boolean>):Observable<HalResource> {
-    return this.halResourceService.patch(this.scopedPath(scope), { collapsed });
+  // Changed: partial update - only the given attributes are sent (and thus written by the
+  // server), so saving column widths does not wipe the collapse state and vice versa.
+  public patch(scope:ViewRowStateScope, changes:ViewRowStateChanges):Observable<HalResource> {
+    const payload:Record<string, unknown> = {};
+
+    if (changes.collapsed !== undefined) {
+      payload.collapsed = changes.collapsed;
+    }
+
+    if (changes.columnWidths !== undefined) {
+      payload.columnWidths = changes.columnWidths;
+    }
+
+    return this.halResourceService.patch(this.scopedPath(scope), payload);
   }
 
   private scopedPath(scope:ViewRowStateScope):string {

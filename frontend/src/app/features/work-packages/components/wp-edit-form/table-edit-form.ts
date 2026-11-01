@@ -105,12 +105,16 @@ export class TableEditForm extends EditForm<WorkPackageResource> {
     return this.waitForContainer(fieldName)
       .then((cell) => {
         // Forcibly set the width since the edit field may otherwise
-        // be given more width. Thereby preserve a minimum width of 150.
-        // To avoid flickering content, the padding is removed, too.
+        // be given more width.
+        // Changed: lock the cell to exactly its current rendered width (border-box, so
+        // padding is included) instead of enforcing a 150px minimum. That minimum made
+        // narrow columns like status and type grow while editing, shifting all columns
+        // next to them. The dropdown panel itself may still be wider than the cell
+        // (see .ng-dropdown-panel min-width in _autocomplete.sass).
         const td = this.findCell(fieldName)!;
+        const width = td.offsetWidth;
         td.classList.add(editModeClassName);
-        let width = td.offsetWidth;
-        width = width > 150 ? width - 10 : 150;
+        td.style.boxSizing = 'border-box';
         td.style.maxWidth = `${width}px`;
         td.style.width = `${width}px`;
 
@@ -132,6 +136,8 @@ export class TableEditForm extends EditForm<WorkPackageResource> {
     if (cell) {
       td.style.width = '';
       td.style.maxWidth = '';
+      // Changed: also undo the border-box sizing set in activateField
+      td.style.boxSizing = '';
       this.cellBuilder.refresh(cell, this.resource, fieldName);
       td.classList.remove(editModeClassName);
 

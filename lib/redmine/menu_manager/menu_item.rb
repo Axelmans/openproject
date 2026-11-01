@@ -178,7 +178,11 @@ class Redmine::MenuManager::MenuItem < Redmine::MenuManager::TreeNode
   end
 
   def enterprise_feature_missing?
-    @enterprise_feature.present? && !EnterpriseToken.allows_to?(@enterprise_feature)
+    # Added: respects the user's personal "hide enterprise banners" preference - only
+    # affects whether the upsell badge icon is shown, not whether the feature is available.
+    @enterprise_feature.present? &&
+      !EnterpriseToken.allows_to?(@enterprise_feature) &&
+      !User.current.pref.hide_enterprise_banners?
   end
 
   def show_divider_before?

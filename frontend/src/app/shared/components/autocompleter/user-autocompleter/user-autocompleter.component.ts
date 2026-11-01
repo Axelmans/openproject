@@ -87,6 +87,9 @@ export class UserAutocompleterComponent extends OpAutocompleterComponent<IUserAu
   @Input() public isOpenedInModal = false;
   @Input() public hoverCards = true;
 
+  // Added to allow showing an "Unassign" action in the dropdown footer
+  @Input() public unassignable = false;
+
   @Input() public url:string = this.apiV3Service.users.path;
 
   @Input() public additionalOptions:IUserAutocompleteItem[]|null = null;
@@ -104,6 +107,7 @@ export class UserAutocompleterComponent extends OpAutocompleterComponent<IUserAu
       inviteUserToProject: this.inviteUserToProject,
       isOpenedInModal: this.isOpenedInModal,
       hoverCards: this.hoverCards,
+      unassignable: this.unassignable,
     });
 
     this

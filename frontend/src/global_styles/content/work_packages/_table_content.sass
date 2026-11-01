@@ -46,6 +46,52 @@
   &:hover
     background-color: var(--bgColor-muted)
 
+// Added: keep the ID column visible while scrolling horizontally through many columns
+// (Linear-style pinned first column). Only ID is pinned, not Subject - Subject's width is
+// flexible (.-max, grows to fill space), which would make the pinned zone unpredictably
+// wide; ID is narrow and fixed. Known limitation: if the optional drag-and-drop or
+// baseline columns are enabled (they render before ID), this pin still anchors to the
+// viewport's left edge rather than to their right edge, so it would overlap those columns
+// during horizontal scroll - acceptable for the default table configuration, not solved here.
+.wp-table--pinned-column
+  position: sticky
+  left: 0
+  z-index: 1
+  background-color: var(--bgColor-default)
+  box-shadow: 1px 0 0 0 var(--borderColor-default)
+
+.wp-table--row:hover .wp-table--pinned-column
+  background-color: var(--bgColor-muted)
+
+.wp-table--group-header .wp-table--pinned-column
+  background-color: var(--bgColor-muted) !important
+
+// Fixed: the pinned column's own opaque background (needed so scrolled-past columns don't
+// show through it) was painting over the row-selected state too, since a child <td>'s own
+// background always shows regardless of what background-color the parent <tr> has - even
+// with !important on the row. Right-clicking a row (or selecting it) left the pinned ID
+// cell looking "stuck" at its resting color while the rest of the row turned blue.
+tr.-checked .wp-table--pinned-column,
+tr.context-menu-selection .wp-table--pinned-column
+  background-color: var(--box-list-item-selected-bg-color) !important
+
+tr.-checked:hover .wp-table--pinned-column,
+tr.context-menu-selection:hover .wp-table--pinned-column
+  background-color: var(--box-list-item-selected-bg-hover-color) !important
+
+thead.-sticky th.wp-table--pinned-column
+  z-index: 2
+  background: var(--body-background)
+
+// Added to allow the ID header's hover highlight to reach the table's left edge: the
+// narrow drag-handle (manual sort) and baseline columns sit before ID and have no hover
+// state of their own, so the highlight used to start a few pixels in from the edge where
+// the row separators begin. They now light up together with the ID header.
+thead.-sticky th.wp-table--manual-sort-th:has(+ th.wp-table--pinned-column:hover),
+thead.-sticky th.wp-table--manual-sort-th:has(+ th.wp-table--baseline-th + th.wp-table--pinned-column:hover),
+thead.-sticky th.wp-table--baseline-th:has(+ th.wp-table--pinned-column:hover)
+  background: var(--bgColor-muted)
+
 
 .wp-table--row,
 #empty-row-notification
@@ -82,9 +128,19 @@
   // To display the input field border correctly (input height is 24px)
   line-height: 24px
 
-  // Avoid that the select field gets too small
+  // Changed: the select used to get min-width 140px, which pushed narrow columns
+  // (status, type) wider while editing and shifted the neighbouring columns. It now fills
+  // exactly the locked cell width (see TableEditForm#activateField); the dropdown panel
+  // keeps a readable minimum width instead (see _autocomplete.sass).
   .inline-edit--field.ng-select
-    min-width: 140px
+    width: 100%
+    min-width: 0
+
+// Added to give the Subject column some breathing room from the pinned ID column's divider
+// line (box-shadow above): tbody cells have padding-left: 0, so subject names sat flush
+// against that border.
+.work-package-table--container table.generic-table tbody td.wp-table--cell-td.subject
+  padding-left: var(--base-size-8, 8px)
 
 // Styles for inline editable attributes
 .work-package-table--container td.-editable
@@ -100,13 +156,19 @@
 // Remove padding from grouping rows (exceeds allowed width of 41px)
 .wp-table--group-header
   height: var(--table-timeline--row-height)
+  // Changed: group headers previously used the exact same background as a hovered row
+  // (--bgColor-muted) with nothing else to tell them apart. Top/bottom borders turn this
+  // into a clear structural divider instead of a fill that could be mistaken for hover.
   background-color: var(--bgColor-muted)
+  border-top: 1px solid var(--borderColor-default)
+  border-bottom: 1px solid var(--borderColor-default)
   td
     padding: 0 !important
     background-color: transparent !important
 
   .group--value
     @include text-shortener
+    font-weight: var(--base-text-weight-medium)
 
 // Shrink column of details / inline-create icons
 .wp-table--configuration-modal--trigger
@@ -194,6 +256,19 @@ html:not(.-browser-mobile)
 .wp-table--cell-td.startDate,
 .wp-table--cell-td.dueDate
   width: 160px
+
+// Added: tighter caps for short-content columns (the generic 300px default in
+// content/_table.sass is far more than these ever need), so more columns fit on screen
+// before horizontal scrolling kicks in.
+.wp-table--cell-td.id
+  max-width: 70px
+
+.wp-table--cell-td.status,
+.wp-table--cell-td.type
+  max-width: 140px
+
+.wp-table--cell-td.priority
+  max-width: 120px
 
 .wp-table--cell-td img.thumbnail
   height: 40px

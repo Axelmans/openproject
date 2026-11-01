@@ -36,6 +36,7 @@ import { UntilDestroyedMixin } from 'core-app/shared/helpers/angular/until-destr
 import { Subject } from 'rxjs';
 import { compareByHref } from 'core-app/shared/helpers/angular/tracking-functions';
 import { repositionDropdownBugfix } from 'core-app/shared/components/autocompleter/op-autocompleter/autocompleter.helper';
+import { Highlighting } from 'core-app/features/work-packages/components/wp-fast-table/builders/highlighting/highlighting.functions';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents
 type AddTagFn = (term:string) => any | Promise<any>;
@@ -113,6 +114,13 @@ export class CreateAutocompleterComponent extends UntilDestroyedMixin implements
     super();
 
     this.text.add_new_action = this.I18n.t('js.label_create');
+  }
+
+  // Added to allow work package types, priorities and statuses to keep their table styling
+  // inside the inline edit dropdown, both for the options and the currently selected value.
+  // The mapping itself lives in Highlighting.inlineClassForResource (shared with the filters).
+  public highlightClass(item:CreateAutocompleterValueOption|HalResource|null|undefined):string|null {
+    return Highlighting.inlineClassForResource(item as HalResource|null|undefined);
   }
 
   ngAfterViewInit() {

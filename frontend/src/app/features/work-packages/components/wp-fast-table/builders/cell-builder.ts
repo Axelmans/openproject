@@ -34,6 +34,10 @@ export class CellBuilder {
       td.classList.add('-max');
     }
 
+    if (attribute === 'id') {
+      td.classList.add('wp-table--pinned-column');
+    }
+
     if (['startDate', 'dueDate', 'duration'].includes(attribute)) {
       td.classList.add('-no-ellipsis');
     }

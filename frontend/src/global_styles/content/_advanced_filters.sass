@@ -35,7 +35,8 @@ $advanced-filters--grid-gap: 10px
 
 .advanced-filters--container
   @extend %filters--container
-  padding: 1rem
+  // Changed: vertical padding reduced from 1rem to make the filter form more compact
+  padding: var(--base-size-12) 1rem
   max-height: 50vh
   overflow-y: auto
   position: relative
@@ -44,15 +45,23 @@ $advanced-filters--grid-gap: 10px
   &.collapsed
     display: none
 
+  // Changed: the close button now lives inside the "Filter by text" row and is vertically
+  // centred on it at the right edge, instead of floating in the container's top-right corner
+  #filter_search
+    position: relative
+
   .advanced-filters--close
     position: absolute
-    top: var(--stack-padding-condensed)
-    right: var(--stack-padding-condensed)
+    top: 50%
+    right: 0
+    transform: translateY(-50%)
     z-index: 2
 
 .advanced-filters--filters
   list-style-type: none
-  margin: var(--base-size-32) 0 0 0
+  // Changed: top margin (was --base-size-32) removed; it only reserved room for the close
+  // button, which now sits inside the first filter row
+  margin: 0
 
   > .advanced-filters--filter
     display: grid
@@ -83,6 +92,13 @@ $advanced-filters--grid-gap: 10px
   display: grid
   grid-template-columns: $advanced-filters--label-size calc(#{$advanced-filters--values-and-operator-size} + #{$advanced-filters--grid-gap}) $advanced-filters--close-icon-size
   grid-gap: $advanced-filters--grid-gap
+  // Added to allow the "Add filter" label to sit vertically centred next to the select
+  align-items: center
+
+  // Added: neutralise the global .add_filter_select margin-bottom (10px, from the reporting
+  // styles) so the space under this last row matches the container's top padding
+  .add_filter_select
+    margin-bottom: 0
 
 // The type="text" is required to be more specific
 .advanced-filters--text-field[type="text"],
@@ -115,9 +131,6 @@ $advanced-filters--grid-gap: 10px
     &:hover
       text-decoration: none
 
-.advanced-filters--remove-filter-icon
-  @extend .icon-close, .icon4
-
 .advanced-filters--add-filter-label-icon
   @extend .icon-add, .icon4
 
@@ -129,7 +142,8 @@ $advanced-filters--grid-gap: 10px
 .advanced-filters--spacer
   border-top: 1px solid $filters--border-color
   height: 1px
-  margin: 0.75rem 0
+  // Changed: reduced from 0.75rem to make the filter form more compact
+  margin: var(--base-size-8) 0
 
 
 .op-filters-form
@@ -212,6 +226,12 @@ $advanced-filters--grid-gap: 10px
     .advanced-filters--remove-filter
       // Align at the end of the container
       grid-column: -1
+
+  // Added to allow the close button to line up with the "Filter by text" label on small
+  // screens, where label and input are stacked and centring would place it between them
+  .advanced-filters--container .advanced-filters--close
+    top: 0
+    transform: none
 
     .advanced-filters--filter-operator,
     .advanced-filters--filter-value

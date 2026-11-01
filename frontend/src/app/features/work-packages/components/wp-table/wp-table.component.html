@@ -3,6 +3,7 @@
     <div class="work-packages-tabletimeline--table-side work-package-table--container __hidden_overflow_container">
       <table
         class="keyboard-accessible-list generic-table work-package-table"
+        [attr.data-column-widths-id]="columnWidthsTableId"
         data-controller="table-highlighting"
         [class.op-table-baseline]="baselineEnabled"
         >
@@ -50,7 +51,8 @@
               @for (column of columns; track column.href) {
                 <th
                   [attr.aria-label]="column.name"
-                  [ngClass]="{'-max': column.id === 'subject', '-min-200': ['estimatedTime', 'remainingTime'].includes(column.id) }"
+                  [attr.data-column-id]="column.id"
+                  [ngClass]="{'-max': column.id === 'subject', '-min-200': ['estimatedTime', 'remainingTime'].includes(column.id), 'wp-table--pinned-column': column.id === 'id' }"
                   class="wp-table--table-header">
                   <sortHeader [headerColumn]="column"
                     [locale]="column.custom_field && column.custom_field.name_locale || locale"
@@ -58,6 +60,21 @@
                     opColumnsContextMenu
                     [opColumnsContextMenu-column]="column"
                     [opColumnsContextMenu-table]="workPackageTable" />
+                  <!-- Added to allow resizing columns: drag to resize, double-click to reset -->
+                  @if (isColumnResizable(column)) {
+                    <span
+                      class="generic-table--column-resizer hide-when-print"
+                      role="separator"
+                      aria-orientation="vertical"
+                      [attr.title]="text.resizeColumn"
+                      [attr.aria-label]="text.resizeColumn"
+                      tabindex="0"
+                      (pointerdown)="onColumnResizeStart($event, column)"
+                      (click)="$event.stopPropagation()"
+                      (keydown)="onColumnResizeKeydown($event, column)"
+                      (dblclick)="onColumnResizeReset($event, column)"
+                    ></span>
+                  }
                 </th>
               }
               @if (configuration.columnMenuEnabled || configuration.actionsColumnEnabled) {

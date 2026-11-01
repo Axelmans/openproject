@@ -31,14 +31,19 @@
 module ::WorkPackages
   class DefaultQueryGeneratorService
     DEFAULT_QUERY = :all_open
+    # Changed: added :all_closed, :due_soon and :watched_by_me, each placed next to the
+    # existing view it complements (all open / overdue / assigned to me).
     QUERY_OPTIONS = [
       DEFAULT_QUERY,
+      :all_closed,
       :latest_activity,
       :recently_created,
       :overdue,
+      :due_soon,
       :summary,
       :created_by_me,
       :assigned_to_me,
+      :watched_by_me,
       :shared_with_users,
       :shared_with_me
     ].freeze
@@ -98,6 +103,30 @@ module ::WorkPackages
         )
       end
 
+      # Added to allow a quick view of finished work, most recently closed/updated first
+      def all_closed_query
+        DEFAULT_PARAMS.merge(
+          {
+            c: %w[id subject type status assignee updatedAt],
+            t: "updatedAt:desc",
+            f: [{ "n" => "status", "o" => "c", "v" => [] }]
+          }
+        )
+      end
+
+      # Added to allow seeing open work that is due within the next 7 days
+      # (counterpart of the overdue view)
+      def due_soon_query
+        DEFAULT_PARAMS.merge(
+          {
+            c: %w[id type subject status startDate dueDate duration],
+            t: "dueDate:asc",
+            f: [{ "n" => "dueDate", "o" => "<t+", "v" => ["7"] },
+                { "n" => "status", "o" => "o", "v" => [] }]
+          }
+        )
+      end
+
       def summary_query
         {}
       end
@@ -118,6 +147,17 @@ module ::WorkPackages
             c: %w[id subject type status author updatedAt],
             f: [{ "n" => "status", "o" => "o", "v" => [] },
                 { "n" => "assigneeOrGroup", "o" => "=", "v" => ["me"] }]
+          }
+        )
+      end
+
+      # Added to allow seeing open work packages the current user is watching
+      def watched_by_me_query
+        DEFAULT_PARAMS.merge(
+          {
+            c: %w[id subject type status assignee updatedAt],
+            f: [{ "n" => "status", "o" => "o", "v" => [] },
+                { "n" => "watcher", "o" => "=", "v" => ["me"] }]
           }
         )
       end
@@ -148,6 +188,11 @@ module ::WorkPackages
           recently_created_query
         when :overdue
           overdue_query
+        # Added: new non user-specific default views
+        when :all_closed
+          all_closed_query
+        when :due_soon
+          due_soon_query
         when :summary
           return if project.blank?
 
@@ -165,6 +210,9 @@ module ::WorkPackages
           created_by_me_query
         when :assigned_to_me
           assigned_to_me_query
+        # Added: only for logged-in users, like the other "me" views
+        when :watched_by_me
+          watched_by_me_query
         when :shared_with_users
           shared_with_users_query
         when :shared_with_me
@@ -173,7 +221,10 @@ module ::WorkPackages
       end
 
       def show_enterprise_icon?(query_key)
-        !EnterpriseToken.allows_to?(:work_package_sharing) && %i[shared_with_users shared_with_me].any?(query_key)
+        # Added: respects the user's personal "hide enterprise banners" preference.
+        !EnterpriseToken.allows_to?(:work_package_sharing) &&
+          %i[shared_with_users shared_with_me].any?(query_key) &&
+          !User.current.pref.hide_enterprise_banners?
       end
     end
   end

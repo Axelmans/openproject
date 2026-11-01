@@ -148,6 +148,18 @@ class UserPreference < ApplicationRecord
     settings[:remember_hierarchy_collapse_state] = to_boolean(value)
   end
 
+  # Added to allow the user to personally hide Enterprise-edition upsell hints (banners
+  # and badge icons) they don't use/need. Defaults to false (show them, unchanged
+  # behavior) - purely opt-in, doesn't affect other users or the instance-wide
+  # `ee_hide_banners` config setting.
+  def hide_enterprise_banners?
+    settings.fetch(:hide_enterprise_banners, false)
+  end
+
+  def hide_enterprise_banners=(value)
+    settings[:hide_enterprise_banners] = to_boolean(value)
+  end
+
   # Provide an alias to form builders
   alias :comments_in_reverse_order :comments_in_reverse_order?
   alias :warn_on_leaving_unsaved :warn_on_leaving_unsaved?
@@ -161,6 +173,7 @@ class UserPreference < ApplicationRecord
   # instead of the real getter, instead of returning the correct default.
   alias :open_details_on_id_click :open_details_on_id_click?
   alias :remember_hierarchy_collapse_state :remember_hierarchy_collapse_state?
+  alias :hide_enterprise_banners :hide_enterprise_banners?
 
   def comments_in_reverse_order=(value)
     settings[:comments_sorting] = to_boolean(value) ? "desc" : "asc"

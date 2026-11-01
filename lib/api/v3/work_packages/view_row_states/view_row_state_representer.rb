@@ -58,6 +58,8 @@ module API
           end
 
           property :collapsed
+          # Added to allow persisting per-user column widths
+          property :column_widths, as: :columnWidths
 
           def _type
             "WorkPackageViewRowState"

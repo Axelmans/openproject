@@ -32,6 +32,8 @@ import { WorkPackageViewRelationColumnsService } from 'core-app/features/work-pa
 import { WorkPackageViewPaginationService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-pagination.service';
 import { WorkPackageViewGroupByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-group-by.service';
 import { WorkPackageViewHierarchiesService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-hierarchy.service';
+// Added to allow resizing columns of the work package table
+import { WorkPackageViewColumnWidthsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-column-widths.service';
 import { WorkPackageViewSortByService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-sort-by.service';
 import { WorkPackageViewColumnsService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-columns.service';
 import { WorkPackageViewFiltersService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-filters.service';
@@ -74,6 +76,8 @@ export const WpIsolatedGraphQuerySpaceProviders = [
   WorkPackageViewPaginationService,
   WorkPackageViewGroupByService,
   WorkPackageViewHierarchiesService,
+  // Added to allow resizing columns of the work package table
+  WorkPackageViewColumnWidthsService,
   WorkPackageViewSortByService,
   WorkPackageViewColumnsService,
   WorkPackageViewFiltersService,

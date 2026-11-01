@@ -90,6 +90,12 @@ class My::LookAndFeelForm < ApplicationForm
                    label: attribute_name(:open_details_on_id_click),
                    caption: attribute_name(:open_details_on_id_click_caption)
 
+      # Added to allow the user to personally hide Enterprise-edition upsell hints
+      # (banners and badge icons) they don't use/need.
+      fg.check_box name: :hide_enterprise_banners,
+                   label: attribute_name(:hide_enterprise_banners),
+                   caption: attribute_name(:hide_enterprise_banners_caption)
+
       # Added to allow the user to control whether hierarchy row collapse/expand state is
       # remembered across visits. Kept as the last field in this form so the "reset
       # remembered state" action (app/views/my/interface.html.erb, rendered right after

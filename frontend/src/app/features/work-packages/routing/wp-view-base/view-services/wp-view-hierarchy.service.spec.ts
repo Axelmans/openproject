@@ -196,7 +196,7 @@ describe('WorkPackageViewHierarchiesService', () => {
         vi.advanceTimersByTime(1000);
 
         expect(patchSpy).toHaveBeenCalledTimes(1);
-        expect(patchSpy).toHaveBeenCalledWith({ queryId: '42' }, { 7: true });
+        expect(patchSpy).toHaveBeenCalledWith({ queryId: '42' }, { collapsed: { 7: true } });
       } finally {
         vi.useRealTimers();
       }
@@ -214,7 +214,7 @@ describe('WorkPackageViewHierarchiesService', () => {
         vi.advanceTimersByTime(1000);
 
         expect(patchSpy).toHaveBeenCalledTimes(1);
-        expect(patchSpy).toHaveBeenCalledWith({}, { 7: true });
+        expect(patchSpy).toHaveBeenCalledWith({}, { collapsed: { 7: true } });
       } finally {
         vi.useRealTimers();
       }
@@ -235,7 +235,7 @@ describe('WorkPackageViewHierarchiesService', () => {
         vi.advanceTimersByTime(1000);
 
         expect(patchSpy).toHaveBeenCalledTimes(1);
-        expect(patchSpy).toHaveBeenCalledWith({ projectId: '45' }, { 7: true });
+        expect(patchSpy).toHaveBeenCalledWith({ projectId: '45' }, { collapsed: { 7: true } });
       } finally {
         vi.useRealTimers();
       }

@@ -53,7 +53,8 @@ module EnterpriseEdition
     end
 
     def render?
-      User.current.admin? && EnterpriseToken.trial_only?
+      # Added: respects the user's personal "hide enterprise banners" preference.
+      User.current.admin? && EnterpriseToken.trial_only? && !User.current.pref.hide_enterprise_banners?
     end
 
     def token

@@ -27,6 +27,7 @@ import { CurrentUserService } from 'core-app/core/current-user/current-user.serv
 import { CollectionResource } from 'core-app/features/hal/resources/collection-resource';
 import { compareByHref } from 'core-app/shared/helpers/angular/tracking-functions';
 import { MAGIC_FILTER_AUTOCOMPLETE_PAGE_SIZE } from 'core-app/core/apiv3/helpers/get-paginated-results';
+import { Highlighting } from 'core-app/features/work-packages/components/wp-fast-table/builders/highlighting/highlighting.functions';
 
 @Component({
   selector: 'op-filter-searchable-multiselect-value',
@@ -78,8 +79,14 @@ export class FilterSearchableMultiselectValueComponent extends UntilDestroyedMix
     placeholder: this.I18n.t('js.placeholders.selection'),
   };
 
+  // Added to allow types, priorities and statuses to look like they do in the table: the
+  // highlight class is stored on each item under this property, which op-autocompleter's
+  // default option/label templates pick up via [additionalClassProperty]
+  readonly highlightClassProperty = '$highlightClass';
+
   public get value():string[]|HalResource[] {
-    return this.filter.values;
+    // Changed: selected values (chips) get their highlight class too
+    return this.withHighlightClass(this.filter.values);
   }
 
   @ViewChild('ngSelectInstance', { static: true }) ngSelectInstance:NgSelectComponent;
@@ -96,7 +103,28 @@ export class FilterSearchableMultiselectValueComponent extends UntilDestroyedMix
       );
   }
 
+  // Added to allow items to carry their table highlight class (see highlightClassProperty).
+  // Items that are not a type/priority/status are left untouched.
+  private withHighlightClass<T extends unknown[]>(items:T):T {
+    items.forEach((item) => {
+      if (item instanceof HalResource && item[this.highlightClassProperty] === undefined) {
+        const hlClass = Highlighting.inlineClassForResource(item);
+        if (hlClass) {
+          item[this.highlightClassProperty] = hlClass;
+        }
+      }
+    });
+
+    return items;
+  }
+
   private autocomplete(matching:string):Observable<HalResource[]> {
+    return this
+      .autocompleteUnhighlighted(matching)
+      .pipe(map((elements) => this.withHighlightClass(elements)));
+  }
+
+  private autocompleteUnhighlighted(matching:string):Observable<HalResource[]> {
     return this
       .initialRequest$
       .pipe(

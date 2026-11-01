@@ -408,6 +408,9 @@ en:
         force_light_theme_contrast_caption: "Uses the high-contrast version of Light mode when automatic color mode is selected."
         header_alerts: "Alerts"
         header_look_and_feel: "Look and feel"
+        # Added to allow the user to personally hide Enterprise-edition upsell hints
+        hide_enterprise_banners: "Hide premium feature hints"
+        hide_enterprise_banners_caption: "When enabled, banners and badges promoting Enterprise-only features (such as the Baseline comparison upsell or the premium-feature icons in menus) are hidden for you."
         impaired: "Accessibility mode"
         increase_contrast: "Increase contrast"
         increase_contrast_caption: "Enables high-contrast mode for the chosen colour mode."
@@ -3421,7 +3424,8 @@ en:
   label_openproject_website: "OpenProject website"
   label_operator_all: "is not empty"
   label_operator_equals_all: "is (AND)"
-  label_operator_equals_or: "is (OR)"
+  # Changed from "is (OR)": OR is the default meaning of "is", so the suffix was noise
+  label_operator_equals_or: "is"
   label_operator_none: "is empty"
   label_operator_plural: "Operators"
   label_operator_shared_with_user_any: "any"

@@ -137,6 +137,14 @@ $nm-color-success-background: #d8fdd1
     .button--text
       margin: 0 4px
 
+    // Added to allow equal icon/text spacing on all flex toolbar buttons
+    // (matches the gap of the "Include projects" button)
+    &.button_flex
+      gap: var(--base-size-8, 0.5rem)
+
+      .button--text
+        margin: 0
+
     .badge
       vertical-align: 1px
       line-height: 1

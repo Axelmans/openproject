@@ -55,6 +55,8 @@ $user-avatar-mini-height: 20px
     color: var(--body-font-color)
 
   // Different border styling for groups
+  // Changed: both the ring and separator were hardcoded white/#cccccc, so stacked group
+  // avatars looked wrong (a bright ring) in dark theme. Swapped for theme-adaptive tokens.
   &_group
-    border: 1px solid white
-    box-shadow: 4px 0px 0px -1px #cccccc
+    border: 1px solid var(--bgColor-default)
+    box-shadow: 4px 0px 0px -1px var(--borderColor-default)

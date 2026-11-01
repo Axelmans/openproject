@@ -1,16 +1,6 @@
 @if (filters) {
   <fieldset id="filters" class="advanced-filters--container">
     <legend [textContent]="text.selected_filter_list"></legend>
-    @if (showCloseFilter) {
-      <primer-icon-button
-        icon="x"
-        scheme="invisible"
-        class="advanced-filters--close"
-        tooltip-direction="se"
-        [label]="text.close_form"
-        (clicked)="closeFilter()"
-      />
-    }
     <ul class="advanced-filters--filters">
       <li id="filter_search" class="advanced-filters--filter --without-operator">
         <label
@@ -23,6 +13,18 @@
         <div class="advanced-filters--filter-value">
           <wp-filter-by-text-input (deactivateFilter)="deactivateFilter($event)" />
         </div>
+        <!-- Changed: close button moved into the "Filter by text" row (was above the list) to
+             allow it to sit at the same height as that row, so the form needs no extra top space -->
+        @if (showCloseFilter) {
+          <primer-icon-button
+            icon="x"
+            scheme="invisible"
+            class="advanced-filters--close"
+            tooltip-direction="se"
+            [label]="text.close_form"
+            (clicked)="closeFilter()"
+          />
+        }
       </li>
       <li class="advanced-filters--spacer"></li>
       @for (filter of filters; track filter.name; let index = $index) {

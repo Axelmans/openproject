@@ -71,7 +71,11 @@ module API
 
               record = ::WorkPackages::ViewRowStates::UpsertService
                          .new(user: current_user)
-                         .call(query: @query, project: @project, collapsed: payload.represented.collapsed || {})
+                         .call(query: @query, project: @project,
+                               # Changed: partial update - only attributes present in the request
+                               # body are written (nil leaves the stored value untouched)
+                               collapsed: payload.represented.collapsed,
+                               column_widths: payload.represented.column_widths)
 
               ViewRowStateRepresenter.new(record, query: @query, project: @project, current_user:)
             rescue ActiveRecord::RecordInvalid => e

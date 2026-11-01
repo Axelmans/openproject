@@ -559,6 +559,8 @@ en:
     label_no_start_date: "no start date"
     label_no_value: "No value"
     label_none: "none"
+    # Added to allow an explicit "unassign" option in user dropdowns (assignee etc.)
+    label_unassign: "Unassign"
     label_not_available: "Not available"
     label_not_contains: "doesn't contain"
     label_not_equals: "is not"
@@ -761,6 +763,9 @@ en:
         page_number: Page %{number}
         show_per_page: Show %{number} per page
       pages_skipped: "Pages skipped."
+      show_skipped_pages: "Show pages %{from}–%{to}"
+      go_to_page: "Go to page"
+      go: "Go"
       per_page_navigation: 'Items per page selection'
 
     placeholders:
@@ -914,6 +919,9 @@ en:
         page_settings: "Rename view"
         save: "Save"
         save_as: "Save as"
+        section_manage: "Manage"
+        section_share_export: "Share & export"
+        section_view: "View"
         share_calendar: "Subscribe to calendar"
         sort_by: "Sort by"
         visibility_settings: "Visibility settings"
@@ -995,6 +1003,10 @@ en:
         header_with_parent: "New %{type} (Child of %{parent_type} #%{id})"
         title: "New work package"
       default_queries:
+        # Added to allow the new default views in the work packages menu
+        all_closed: "All closed"
+        due_soon: "Due soon"
+        watched_by_me: "Watched by me"
         all_open: "All open"
         assigned_to_me: "Assigned to me"
         created_by_me: "Created by me"
@@ -1136,6 +1148,8 @@ en:
         show_all_users: "Show all users with whom the work package has been shared with"
         title: "Share work package"
       table:
+        # Added to allow resizing columns of the work package table
+        resize_column: "Resize column (double-click to reset)"
         configure_button: "Configure work package table"
         summary: "Table with rows of work package and columns of work package attributes."
         text_inline_edit: "Most cells of this table are buttons that activate inline-editing functionality of that attribute."

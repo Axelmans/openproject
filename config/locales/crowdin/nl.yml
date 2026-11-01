@@ -391,6 +391,8 @@ nl:
         force_light_theme_contrast_caption: Uses the high-contrast version of Light mode when automatic color mode is selected.
         header_alerts: Alerts
         header_look_and_feel: Look and feel
+        hide_enterprise_banners: Premium-functie meldingen verbergen
+        hide_enterprise_banners_caption: Indien ingeschakeld worden banners en badges die Enterprise-only functies promoten (zoals de baseline-vergelijking-upsell of de premium-functie-iconen in menu's) voor jou verborgen.
         impaired: Toegankelijkheidsmodus
         increase_contrast: Increase contrast
         increase_contrast_caption: Enables high-contrast mode for the chosen colour mode.
@@ -3309,7 +3311,8 @@ nl:
   label_openproject_website: OpenProject website
   label_operator_all: is niet leeg
   label_operator_equals_all: is (AND)
-  label_operator_equals_or: is (OR)
+  # Changed from "is (OR)": OR is the default meaning of "is", so the suffix was noise
+  label_operator_equals_or: is
   label_operator_none: is leeg
   label_operator_plural: Operators
   label_operator_shared_with_user_any: elke

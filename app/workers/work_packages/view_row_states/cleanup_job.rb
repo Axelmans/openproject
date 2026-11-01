@@ -45,7 +45,8 @@ module WorkPackages
 
           next if pruned == record.collapsed
 
-          if pruned.empty?
+          # Changed: keep rows that still hold custom column widths
+          if pruned.empty? && record.column_widths.blank?
             record.destroy!
           else
             record.update!(collapsed: pruned)

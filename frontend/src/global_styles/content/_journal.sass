@@ -26,13 +26,11 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-#history
-  width: 700px
-  margin:
-    top: 1em
-    bottom: 0
-  h3
-    margin-bottom: 20px
+// Removed the dead #history block here (verified via grep: no view anywhere renders an
+// element with id="history" any more - the WP activity tab moved to the ViewComponent
+// system). The rest of this file (.journal, .journal-attributes, ...) stays: it's still
+// actively rendered by Meetings' own journal/changelog display (see
+// modules/meeting/app/helpers/meetings_helper.rb#render_meeting_journal).
 
 .journal
   width: 700px

@@ -51,8 +51,9 @@ export class WorkPackageFilterButtonComponent extends AbstractWorkPackageButtonC
 
   public buttonId = 'work-packages-filter-toggle-button';
 
-  public iconClass = 'icon-filter';
-
+  // Changed from an icon-font class to the Octicon SVG already used by sibling toolbar
+  // buttons (e.g. wp-create-button's plus/triangle-down), so this button doesn't mix
+  // icon systems with its neighbors.
   public title = this.I18n.t('js.work_packages.filters.title');
 
   constructor() {

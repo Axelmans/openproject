@@ -189,12 +189,21 @@ display-field .hierarchy-items,
   overflow-wrap: anywhere
   word-break: normal
 
-  &:hover,
-  &:focus
+  &.-multiline:hover,
+  &.-multiline:focus
+    white-space: inherit
+
+  &:hover
     border-color: var(--borderColor-default)
 
-    &.-multiline
-      white-space: inherit
+  // Changed: the app deliberately re-focuses this display field after an edit is
+  // cancelled, so keyboard users can still see where focus landed - but it previously
+  // reused the same solid border as :hover, which reads as "this is still an active input
+  // box" rather than "this has focus". A thin outline keeps the focus visible without
+  // looking like an open edit field.
+  &:focus
+    outline: 1px solid var(--borderColor-default)
+    outline-offset: 1px
 
 // Mark focused, non-editable read-values
 // Special handling for spent time field, as the logTime link should not be highlighted

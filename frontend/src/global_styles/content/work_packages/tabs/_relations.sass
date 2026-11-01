@@ -52,6 +52,12 @@
 
 .relation-row
   line-height: 2em
+  // Added: a light, card-like hover background (same token as WP table row hover this
+  // session) so each relation reads as a discrete row rather than a dense grid line.
+  border-radius: var(--borderRadius-medium)
+
+  &:hover
+    background-color: var(--bgColor-muted)
 
   .inline-edit--container
     @include text-shortener
@@ -64,7 +70,10 @@
   &--grid
     display: grid
     align-items: center
-    grid-template: "id info subject status actions" / 10% 12.5% 45% 22.5% 10%
+    // Changed the subject column from a fixed 45% to a flexible minmax() track, so it
+    // keeps a sensible minimum width instead of being squeezed as proportionally as the
+    // other columns on narrower panels.
+    grid-template: "id info subject status actions" / 10% 12.5% minmax(120px, 1fr) 22.5% 10%
     margin-bottom: $spot-spacing-0_5
 
     @media #{$spot-mq-mobile}
@@ -117,6 +126,8 @@
   width: 100%
   padding: 5px
   border: 1px solid transparent
+  // Changed to match the --borderRadius-medium rollout elsewhere this session.
+  border-radius: var(--borderRadius-medium)
 
   // Wrap newlines in the description
   white-space: pre-wrap
@@ -125,7 +136,9 @@
     font-style: italic
 
   &:hover
-    border-color: var(--light-gray)
+    // Changed from the legacy --light-gray (hardcoded hex, same bug class fixed elsewhere
+    // this session) to the theme-adaptive border token.
+    border-color: var(--borderColor-default)
     cursor: text
 
 // Set min-height to read/write identically

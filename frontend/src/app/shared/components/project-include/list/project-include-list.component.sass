@@ -11,5 +11,22 @@
     overflow-y: auto
     @include styled-scroll-bar
 
+  // Added: a vertical connector line for nested (sub-project) lists, so the hierarchy has
+  // a visual signal beyond indentation alone - the indent step comes from a separate rule
+  // in spot/styles/sass/components/list.sass, so this is purely decorative (position:
+  // absolute, pointer-events: none) and doesn't affect that spacing or the checkbox hit area.
+  &:not(.op-project-include-list--root)
+    position: relative
+
+    &:before
+      content: ""
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 0.75rem
+      width: 1px
+      background: var(--borderColor-default)
+      pointer-events: none
+
   &--tooltip
     max-width: 100%

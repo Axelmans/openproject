@@ -846,13 +846,15 @@ input[readonly].-clickable
     .toolbar &
       width: auto
 
+    // Changed from a hardcoded 2px (looked sharp/square next to the rest of the app's
+    // --borderRadius-medium rollout) to the same token used elsewhere.
     &:first-of-type
       border-left-width: 1px
-      border-top-left-radius: 2px
-      border-bottom-left-radius: 2px
+      border-top-left-radius: var(--borderRadius-medium)
+      border-bottom-left-radius: var(--borderRadius-medium)
     &:last-of-type
-      border-top-right-radius: 2px
-      border-bottom-right-radius: 2px
+      border-top-right-radius: var(--borderRadius-medium)
+      border-bottom-right-radius: var(--borderRadius-medium)
 
     &:focus-within
       @include focus

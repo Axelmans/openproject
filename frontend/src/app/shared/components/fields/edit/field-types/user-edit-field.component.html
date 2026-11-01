@@ -1,4 +1,7 @@
 @if (url) {
+  <!-- Changed: clearable disabled, unassigning is done via the "Unassign" footer action.
+       When that action is not offered the field is required or empty, so there is
+       nothing to clear anyway. -->
   <op-user-autocompleter class="inline-edit--field {{ handler.fieldName }}"
     [url]="url"
     [inviteUserToProject]="$safeNavigationMigration(resource.project?.id)"
@@ -6,6 +9,8 @@
     [openDirectly]="!(handler.inEditMode || isNew)"
     appendTo="body"
     [model]="value"
+    [unassignable]="unassignable"
+    [clearable]="false"
     [id]="handler.htmlId"
     (change)="onModelChange($event)"
     (cancel)="handler.handleUserCancel()"

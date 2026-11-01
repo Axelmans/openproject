@@ -24,10 +24,20 @@
     <b [textContent]="text.add_new_action"></b>: {{ search }}
   </ng-template>
 
+  <!-- Added to allow the selected value to carry the type highlight class (see highlightClass) -->
+  <ng-template ng-label-tmp let-item="item">
+    <span [textContent]="item.name"
+          [ngClass]="highlightClass(item)"
+          class="ng-value-label">
+    </span>
+  </ng-template>
+
+  <!-- Changed: options also get the type highlight class, matching the table styling -->
   <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
     <span [ngOptionHighlight]="search"
           [textContent]="item.name"
           [ngStyle]="{'padding-left.px': item.depth * 16}"
+          [ngClass]="highlightClass(item)"
           class="ng-option-label ellipsis">
     </span>
   </ng-template>

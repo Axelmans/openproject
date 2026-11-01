@@ -76,12 +76,67 @@ export class EditFormPortalComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy() {
     this.onEditFieldReady.complete();
+    this.removeOutsideClickListener();
   }
 
   ngAfterViewInit() {
     // Fire in a timeout to avoid same execution context in AfterViewInit
     setTimeout(() => {
       this.onEditFieldReady.emit();
+      this.registerOutsideClickListener();
     });
+  }
+
+  // Added to allow closing an inline table field by clicking outside of it. Upstream only
+  // closes on Enter/Escape, so clicking a cell and then clicking elsewhere left an open
+  // input box behind in the work package table.
+  // Overlays rendered outside the cell (dropdowns, datepickers, modals) belong to the field,
+  // so clicks inside them must not close it.
+  private static readonly outsideClickIgnoreSelector = [
+    '.ng-dropdown-panel',
+    '.spot-drop-modal',
+    '.spot-modal-overlay',
+    '.op-datepicker-modal',
+    '.flatpickr-calendar',
+    '.cdk-overlay-container',
+    'dialog',
+    '[role="dialog"]',
+  ].join(', ');
+
+  private readonly onDocumentPointerDown = (event:PointerEvent) => {
+    const target = event.target as Element|null;
+    if (!target?.isConnected) {
+      return;
+    }
+
+    if (this.elementRef.nativeElement.contains(target)
+      || target.closest(EditFormPortalComponent.outsideClickIgnoreSelector)) {
+      return;
+    }
+
+    // Only close untouched fields: a field with pending changes stays open so the
+    // user's input is never silently discarded (or saved without them confirming).
+    if (this.handler.isChanged() || this.handler.inFlight) {
+      return;
+    }
+
+    this.removeOutsideClickListener();
+    this.handler.deactivate(false);
+  };
+
+  private registerOutsideClickListener() {
+    // Only in the work package table, and not in edit mode forms (e.g. inline create),
+    // where all fields are meant to stay open together until saved.
+    // Also skip if the field was already closed before this deferred call ran.
+    const inTable = !!this.elementRef.nativeElement.closest('.work-package-table--container');
+    if (!inTable || this.handler.inEditMode || !this.elementRef.nativeElement.isConnected) {
+      return;
+    }
+
+    document.addEventListener('pointerdown', this.onDocumentPointerDown, true);
+  }
+
+  private removeOutsideClickListener() {
+    document.removeEventListener('pointerdown', this.onDocumentPointerDown, true);
   }
 }

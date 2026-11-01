@@ -37,6 +37,8 @@ module API
           include ::API::Utilities::PayloadRepresenter
 
           property :collapsed
+          # Added to allow persisting per-user column widths
+          property :column_widths, as: :columnWidths
         end
       end
     end

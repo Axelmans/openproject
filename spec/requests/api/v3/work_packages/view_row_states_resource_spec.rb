@@ -184,6 +184,32 @@ RSpec.describe "API v3 work package view row states resource", content_type: :js
         .to eq(other_work_package.id.to_s => true)
     end
 
+    # Added to allow persisting per-user column widths
+    context "when saving column widths" do
+      before do
+        patch api_v3_paths.view_row_states(query_id: query.id),
+              { columnWidths: { "status" => 150, "type" => 5 } }.to_json
+      end
+
+      it "persists the clamped widths and returns them" do
+        expect(response).to have_http_status(200)
+        expect(response.body)
+          .to be_json_eql({ "status" => 150, "type" => 40 }.to_json).at_path("columnWidths")
+      end
+
+      it "keeps the collapsed map stored by the earlier PATCH (partial update)" do
+        expect(WorkPackages::ViewRowState.scoped_to(user:, query:).collapsed)
+          .to eq(work_package.id.to_s => true)
+      end
+
+      it "keeps the widths when only the collapsed map is patched afterwards" do
+        patch api_v3_paths.view_row_states(query_id: query.id), { collapsed: {} }.to_json
+
+        expect(WorkPackages::ViewRowState.scoped_to(user:, query:).column_widths)
+          .to eq("status" => 150, "type" => 40)
+      end
+    end
+
     context "when not logged in" do
       let(:user) { User.anonymous }
 

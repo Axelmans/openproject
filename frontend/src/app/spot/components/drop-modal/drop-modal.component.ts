@@ -4,7 +4,7 @@ import { findAllFocusableElementsWithin } from 'core-app/shared/helpers/focus-he
 import { SpotDropModalTeleportationService } from './drop-modal-teleportation.service';
 import { filter, take } from 'rxjs/operators';
 import { debounce } from 'lodash-es';
-import { autoUpdate, computePosition, flip, limitShift, Placement, shift } from '@floating-ui/dom';
+import { autoUpdate, computePosition, flip, limitShift, offset, Placement, shift } from '@floating-ui/dom';
 
 @Component({
   selector: 'spot-drop-modal',
@@ -116,14 +116,18 @@ export class SpotDropModalComponent implements OnDestroy {
               floatingEl,
               {
                 placement: this.alignment,
+                // Changed: offset(4) added to allow a small gap between the trigger button and
+                // the popup, which previously sat flush against the button. It comes first so
+                // flip/shift take the gap into account.
                 middleware: this.allowRepositioning ? [
+                  offset(4),
                   flip({
                     mainAxis: true,
                     crossAxis: true,
                     fallbackAxisSideDirection: 'start',
                   }),
                   shift({ limiter: limitShift() }),
-                ] : [],
+                ] : [offset(4)],
               },
             );
 

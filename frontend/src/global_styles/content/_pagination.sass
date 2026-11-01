@@ -74,6 +74,12 @@ $pagination--font-size: 0.8125rem
       font-style: italic
       text-align: center
 
+      // Added to allow the current page box to replace the plain italic look (wrapper becomes neutral)
+      &:has(> .op-pagination--item-link_current)
+        background: transparent
+        border: 0
+        padding: 0
+
     &-link
       margin: 0
       display: inline-flex
@@ -92,6 +98,18 @@ $pagination--font-size: 0.8125rem
         color: var(--body-font-color)
         text-decoration: none
         background: var(--button--background-hover-color)
+
+      // Added to allow highlighting the current page in the same blue as the primary "Create" button
+      &_current,
+      &_current:hover
+        background: var(--button--primary-background-color)
+        // Changed: the primary border colour equals the fill, so the current page had no
+        // visible outline next to the outlined page/Previous buttons. A lighter tint of the
+        // same accent gives it a matching, visible edge.
+        border-color: color-mix(in srgb, var(--button--primary-background-color) 60%, var(--fgColor-default) 40%)
+        color: var(--button--primary-font-color)
+        font-style: normal
+        cursor: default
 
       &_prev
         padding-left: var(--base-size-6)
@@ -116,6 +134,96 @@ $pagination--font-size: 0.8125rem
     font-style: italic
     padding: 3px 0
     margin: 0 5px 0 0
+
+  // Added to allow clicking the ellipsis to open a page jump popover
+  &--gap
+    position: relative
+    padding: 0
+    font-style: normal
+
+  &--gap-trigger
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    min-width: 25px
+    padding: 3px var(--base-size-4)
+    background: transparent
+    border: 1px solid transparent
+    border-radius: 4px
+    color: var(--fgColor-muted)
+    cursor: pointer
+    &:hover,
+    &[aria-expanded="true"]
+      color: var(--body-font-color)
+      background: var(--button--background-hover-color)
+      border-color: var(--button-default-borderColor-rest)
+
+  &--popover
+    position: absolute
+    bottom: calc(100% + 6px)
+    left: 50%
+    transform: translateX(-50%)
+    z-index: 100
+    width: max-content
+    max-width: 280px
+    padding: var(--base-size-8)
+    background: var(--overlay-bgColor)
+    border: 1px solid var(--borderColor-default)
+    border-radius: 8px
+    box-shadow: var(--shadow-floating-small)
+    font-style: normal
+
+  &--popover-grid
+    display: grid
+    grid-template-columns: repeat(6, minmax(32px, 1fr))
+    gap: var(--base-size-4)
+    max-height: 180px
+    overflow-y: auto
+
+  &--popover-page
+    padding: var(--base-size-4)
+    background: transparent
+    border: 1px solid transparent
+    border-radius: 4px
+    color: var(--body-font-color)
+    font-size: $pagination--font-size
+    font-variant-numeric: tabular-nums
+    cursor: pointer
+    &:hover,
+    &:focus-visible
+      background: var(--button--background-hover-color)
+      border-color: var(--button-default-borderColor-rest)
+
+  &--popover-jump
+    display: flex
+    gap: var(--base-size-4)
+    margin-top: var(--base-size-8)
+    padding-top: var(--base-size-8)
+    border-top: 1px solid var(--borderColor-muted)
+
+  &--popover-input
+    flex: 1
+    min-width: 0
+    height: 26px
+    margin: 0
+    padding: 0 var(--base-size-6)
+    font-size: $pagination--font-size
+    border: 1px solid var(--borderColor-default)
+    border-radius: 4px
+    background: var(--bgColor-default)
+    color: var(--body-font-color)
+
+  &--popover-go
+    padding: 0 var(--base-size-8)
+    height: 26px
+    font-size: $pagination--font-size
+    background: var(--button--background-color)
+    border: 1px solid var(--button-default-borderColor-rest)
+    border-radius: 4px
+    color: var(--body-font-color)
+    cursor: pointer
+    &:hover
+      background: var(--button--background-hover-color)
 
   &--label
     flex: 1

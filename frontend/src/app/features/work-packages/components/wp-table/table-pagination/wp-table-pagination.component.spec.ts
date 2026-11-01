@@ -44,12 +44,13 @@ import { HalResourceService } from 'core-app/features/hal/services/hal-resource.
 import { of } from 'rxjs';
 import { WeekdayService } from 'core-app/core/days/weekday.service';
 
-function setupMocks(paginationService:PaginationService) {
+function setupMocks(paginationService:PaginationService, overrides:Partial<IPaginationOptions> = {}) {
   const options:IPaginationOptions = {
     perPage: 0,
     perPageOptions: [10, 50],
     maxVisiblePageOptions: 1,
     optionsTruncationSize: 6,
+    ...overrides,
   };
 
   vi.spyOn(paginationService, 'getMaxVisiblePageOptions').mockImplementation(() => options.maxVisiblePageOptions);
@@ -162,6 +163,66 @@ describe('wpTablePagination Directive', () => {
       fixture.detectChanges();
 
       expect(numberOfPageNumberLinks()).toEqual(6);
+    }));
+  });
+
+  describe('clickable ellipsis', () => {
+    const defaults = { maxVisiblePageOptions: 6, optionsTruncationSize: 1 };
+
+    function gapTriggers(element:HTMLElement) {
+      return element.querySelectorAll('.op-pagination--gap-trigger');
+    }
+
+    it('is not shown when no pages are skipped', inject([PaginationService], (paginationService:PaginationService) => {
+      setupMocks(paginationService, defaults);
+      const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
+      const app = fixture.componentInstance;
+
+      app.pagination = new PaginationInstance(1, 22, 20);
+      app.update();
+      fixture.detectChanges();
+
+      expect(app.postSkippedPages).toEqual([]);
+      expect(gapTriggers(fixture.nativeElement as HTMLElement).length).toEqual(0);
+    }));
+
+    it('offers the skipped pages in a popover', inject([PaginationService], (paginationService:PaginationService) => {
+      setupMocks(paginationService, defaults);
+      const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
+      const app = fixture.componentInstance;
+      const element = fixture.nativeElement as HTMLElement;
+
+      app.pagination = new PaginationInstance(10, 440, 20);
+      app.update();
+      fixture.detectChanges();
+
+      expect(app.preSkippedPages).toEqual([2, 3, 4, 5, 6, 7]);
+      expect(app.postSkippedPages).toEqual([14, 15, 16, 17, 18, 19, 20, 21]);
+      expect(gapTriggers(element).length).toEqual(2);
+
+      (gapTriggers(element)[1] as HTMLButtonElement).click();
+      fixture.detectChanges();
+
+      const pages = Array.from(element.querySelectorAll('.op-pagination--popover-page')).map((el) => el.textContent?.trim());
+      expect(pages).toEqual(['14', '15', '16', '17', '18', '19', '20', '21']);
+    }));
+
+    it('clamps the jump target to the existing pages', inject([PaginationService], (paginationService:PaginationService) => {
+      setupMocks(paginationService, defaults);
+      const fixture = TestBed.createComponent(WorkPackageTablePaginationComponent);
+      const app = fixture.componentInstance;
+      const showPage = vi.spyOn(app, 'showPage').mockImplementation(() => undefined);
+
+      app.pagination = new PaginationInstance(1, 440, 20);
+      app.update();
+      app.toggleGap('post');
+
+      app.jumpTo('999');
+      expect(showPage).toHaveBeenCalledWith(22);
+      expect(app.openGap).toBeNull();
+
+      app.jumpTo('abc');
+      expect(showPage).toHaveBeenCalledTimes(1);
     }));
   });
 });

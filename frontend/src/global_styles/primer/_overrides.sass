@@ -102,6 +102,13 @@ ul.SegmentedControl,
   &:not(.Button--primary) svg
     color: var(--header-item-font-color)
 
+  // Added: Primer's button always renders a .Button-label span between the leading and
+  // trailing visual, even with no text (e.g. the quick-add "+ ▾" button, icon-only on both
+  // sides). The parent's flex `gap` still applies around that empty span, showing as
+  // unwanted space between the two icons - hiding it removes it from the gap entirely.
+  .Button-label:empty
+    display: none
+
   svg
     align-self: center
 

@@ -71,35 +71,38 @@
     &:not(:first-child)
       margin-left: $spot-spacing-0_5
 
+    // Changed from hardcoded hex (broke in dark theme) to the existing categorical
+    // --display-*-fgColor scale, keeping each file type its own distinct, theme-adaptive
+    // color rather than inventing new values.
     &_pdf
-      color: #B93A33
+      color: var(--display-red-fgColor)
 
     &_img
-      color: #0081C7
+      color: var(--display-blue-fgColor)
 
     &_mov
-      color: #7C006E
+      color: var(--display-purple-fgColor)
 
     &_txt
-      color: #9A9A9A
+      color: var(--display-gray-fgColor)
 
     &_doc
-      color: #006E8F
+      color: var(--display-teal-fgColor)
 
     &_sheet
-      color: #007528
+      color: var(--display-green-fgColor)
 
     &_presentation
-      color: #EF9E56
+      color: var(--display-orange-fgColor)
 
     &_form
-      color: #87E2C1
+      color: var(--display-pine-fgColor)
 
     &_primary
       color: var(--accent-color)
 
     &_default
-      color: #9A9A9A
+      color: var(--display-gray-fgColor)
 
     &_clip
-      color: #333333
+      color: var(--fgColor-muted)

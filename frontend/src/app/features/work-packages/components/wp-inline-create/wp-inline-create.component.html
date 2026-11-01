@@ -7,6 +7,9 @@
         [attr.colspan]="colspan"
         class="wp-inline-create-button-td"
         >
+        <!-- Added to allow the create (and reference) actions to render as full-width,
+             Linear-style "add row" buttons laid out side by side (see _table_inline_create.sass) -->
+        <div class="wp-inline-create-button-wrapper">
         @if (canAdd) {
           <button
             type="button"
@@ -35,6 +38,7 @@
             <span [textContent]="text.reference"></span>
           </button>
         }
+        </div>
       </td>
     </tr>
   }

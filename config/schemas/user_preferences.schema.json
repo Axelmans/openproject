@@ -37,6 +37,9 @@
                 "remember_hierarchy_collapse_state": {
                   "type": "boolean"
                 },
+                "hide_enterprise_banners": {
+                  "type": "boolean"
+                },
                 "comments_sorting": {
                     "type": "string",
                     "enum": ["asc", "desc"]

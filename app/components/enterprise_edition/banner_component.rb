@@ -167,6 +167,11 @@ module EnterpriseEdition
     def render?
       return true if @show_always
       return false if dismissed?
+      # Added: a user's personal "hide enterprise banners" preference takes priority over
+      # the trial-bypass below, unlike the instance-wide EnterpriseToken.hide_banners?
+      # setting - someone who explicitly opted out doesn't want to see this even during an
+      # active trial.
+      return false if User.current.pref.hide_enterprise_banners?
       return true if feature_available? && trial_feature?
       return false if EnterpriseToken.hide_banners?
 

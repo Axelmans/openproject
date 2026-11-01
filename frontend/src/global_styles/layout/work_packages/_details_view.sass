@@ -26,6 +26,10 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
+// Added: named constant for what was three repeated magic `55px` values in this file (the
+// bottom toolbar's own height, and the content area's bottom offset/margin that depend on it).
+$details-toolbar-height: 55px
+
 // Right part of the split view
 // Visible only in the details ui-view
 body.router--work-packages-partitioned-split-view-details,
@@ -34,8 +38,17 @@ body.router--work-packages-partitioned-split-view-new
   .work-packages-partitioned-page--content-right
     overflow: auto
     position: relative
-    border-left: 2px solid var(--borderColor-default)
-    border-top: 2px solid var(--borderColor-default)
+    // Changed: the left edge (the actual table/panel divider) gets a resting shadow on top
+    // of the hairline border, so the panel reads as elevated/floating next to the table
+    // (Linear-style) instead of just cut off.
+    border-left: 1px solid var(--borderColor-default)
+    box-shadow: -4px 0 8px -4px color-mix(in srgb, var(--fgColor-default) 10%, transparent)
+    // Changed from 2px to 1px - still separates this panel from the global header above
+    // it, but the thicker line read as heavier than the rest of the now-softer UI.
+    border-top: 1px solid var(--borderColor-default)
+    // Added: a touch of rounding on the one corner that's actually visible as a corner
+    // (top-right sits under the info/fullscreen/close icon row, not requested).
+    border-top-left-radius: var(--borderRadius-medium)
     padding: 0
 
     // Will eventually be overridden by the resizer
@@ -57,10 +70,14 @@ body.router--work-packages-partitioned-split-view-new
 .work-packages--details-toolbar-container
   position:   absolute
   bottom:     0
-  height:     55px
+  height:     $details-toolbar-height
   width:      100%
   background: var(--bgColor-muted)
   border-top: 1px solid var(--borderColor-muted)
+  // Added: a touch of resting elevation above the flat border. This toolbar is pinned to
+  // the bottom edge, so (unlike the --shadow-resting-* tokens, which cast downward) the
+  // shadow needs to cast upward onto the scrollable content above it to read as elevated.
+  box-shadow: 0 -2px 4px 0 color-mix(in srgb, var(--fgColor-default) 6%, transparent)
   padding:    0 1rem 10px
 
   @media print
@@ -74,7 +91,7 @@ body.router--work-packages-partitioned-split-view-new
   flex-direction:  column
   position:        absolute
   top:             50px
-  bottom:          55px
+  bottom:          $details-toolbar-height
   width:           100%
   overflow:        hidden
 
@@ -133,7 +150,7 @@ body.router--work-packages-partitioned-split-view-new
   flex-shrink: 0
 
 .work-package--new-state
-  margin-bottom: 55px
+  margin-bottom: $details-toolbar-height
 
   .title-container
     overflow: visible

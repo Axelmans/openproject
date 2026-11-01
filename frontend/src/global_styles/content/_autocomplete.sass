@@ -99,7 +99,11 @@ div.autocomplete
       padding-left: 0px
 
   .ng-select-container
-    border-radius: 2px
+    // Changed from a hardcoded 2px to the shared radius token used in the UI rework.
+    // !important because the ng-select theme squares off the corners facing the dropdown
+    // while it is open; the dropdown panel is now detached (gap below), so all corners
+    // can stay rounded.
+    border-radius: var(--borderRadius-medium) !important
     z-index: auto !important
     height: 30px !important
     min-height: 30px !important
@@ -164,9 +168,41 @@ div.autocomplete
     // We subtract the width and right padding of the dropdown arrow
     max-width: calc(100% - 25px - 5px)
 
+  // Added to allow highlighted chips (types in their colour, priority/status with their dot)
+  // to stay readable: the default blue chip background clashes with the coloured text, so
+  // these chips get a neutral, Linear-style background with a subtle border instead.
+  .ng-value:has(> .ng-value-label[class*='__hl_inline_'])
+    background-color: var(--bgColor-muted) !important
+    border: 1px solid var(--borderColor-default)
+    color: var(--fgColor-default)
+
+    .ng-value-icon
+      color: var(--fgColor-muted)
+      border-color: var(--borderColor-default) !important
+
+      &:hover
+        background-color: var(--bgColor-neutral-muted) !important
+
 // Ensure dropdown is above modals
 .ng-dropdown-panel
   z-index: 9500 !important
+  // Added to allow dropdown panels (e.g. assignee) to match the rounded corners used
+  // elsewhere in the UI rework. The ng-select theme only rounds the corners facing away
+  // from the input, so all corners are forced here. overflow: hidden keeps the opaque
+  // option/footer backgrounds from painting over the rounded corners.
+  border-radius: var(--borderRadius-medium) !important
+  overflow: hidden
+
+  // Added to allow some breathing room between the input and its dropdown panel, instead
+  // of the panel sticking to the input (the ng-select theme even overlaps it by 1px).
+  // Changed: the gap mirrors the input's position within a table row. The 30px input sits
+  // (row height - 30px) / 2 above the row's bottom edge; doubling that (+1px row border)
+  // puts the panel the same distance below the row edge as the input is above it.
+  &.ng-select-bottom
+    margin-top: calc(var(--table-timeline--row-height, 36px) - 30px + 1px) !important
+
+  &.ng-select-top
+    margin-bottom: calc(var(--table-timeline--row-height, 36px) - 30px + 1px) !important
 
   // Overrides for the ng-footer-tmp option
   .ng-footer-text
@@ -204,3 +240,7 @@ div.autocomplete
 
 .work-package-table--container .ng-dropdown-panel
   z-index: auto !important
+  // Added to allow the inline select in the table to stay as narrow as its (locked)
+  // column without the option list becoming unreadable: ng-select sets the panel's width
+  // inline to the select's width, min-width overrides that.
+  min-width: 140px

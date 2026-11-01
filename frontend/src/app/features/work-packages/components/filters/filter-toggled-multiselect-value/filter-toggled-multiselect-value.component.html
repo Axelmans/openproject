@@ -17,5 +17,27 @@
     [trackByFn]="itemTracker"
     bindLabel="name"
     (change)="setValues($event)"
-   />
+  >
+    <!-- Added to allow options to carry the table highlight class (see highlightClass) -->
+    <ng-template op-autocompleter-option-tmp let-item let-search="search">
+      <span [ngOptionHighlight]="search"
+            [textContent]="item.name"
+            [ngClass]="highlightClass(item)"
+            class="ng-option-label ellipsis">
+      </span>
+    </ng-template>
+
+    <!-- Added to allow selected chips to carry the highlight class too; mirrors the default
+         op-autocompleter label (clear icon + name) -->
+    <ng-template op-autocompleter-label-tmp let-item let-search="search" let-clear="clear">
+      <span class="ng-value-icon left"
+            tabindex="0"
+            (click)="clear(item)"
+            (keydown.enter)="$event.preventDefault(); clear(item)"
+            (keydown.space)="$event.preventDefault(); clear(item)">×</span>
+      <span [ngOptionHighlight]="search"
+            [ngClass]="highlightClass(item)"
+            class="ng-value-label">{{ item.name }}</span>
+    </ng-template>
+  </op-autocompleter>
 </div>

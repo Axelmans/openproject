@@ -8,6 +8,7 @@ import { ConfigurationService } from 'core-app/core/config/configuration.service
 import { ApiV3Service } from 'core-app/core/apiv3/api-v3.service';
 // Added to allow persisting per-user hierarchy row collapse state per work package list
 import { ViewRowStateScope } from 'core-app/core/apiv3/endpoints/work_packages/apiv3-view-row-states';
+import { resolveViewRowStateScope } from 'core-app/features/work-packages/routing/wp-view-base/view-services/view-row-state-scope';
 // Added to allow persisting per-user hierarchy row collapse state per work package list
 import { CurrentProjectService } from 'core-app/core/current-project/current-project.service';
 import { Subject } from 'rxjs';
@@ -63,19 +64,10 @@ export class WorkPackageViewHierarchiesService extends WorkPackageQueryStateServ
   }
 
   // Added to allow persisting per-user hierarchy row collapse state per work package list.
-  // A saved query is scoped by its id; otherwise, in a project context, by the project's
-  // numeric id (available synchronously via CurrentProjectService, no extra HTTP call);
-  // otherwise the global (no query, no project) scope.
+  // Changed: the scope rules moved to resolveViewRowStateScope, shared with the column
+  // widths service.
   private resolveScope(query:QueryResource):ViewRowStateScope {
-    if (query.id) {
-      return { queryId: query.id };
-    }
-
-    if (this.currentProjectService.inProjectContext) {
-      return { projectId: this.currentProjectService.id };
-    }
-
-    return {};
+    return resolveViewRowStateScope(query, this.currentProjectService);
   }
 
   // Added to allow persisting per-user hierarchy row collapse state per work package list
@@ -116,7 +108,7 @@ export class WorkPackageViewHierarchiesService extends WorkPackageQueryStateServ
       .apiV3Service
       .work_packages
       .view_row_states
-      .patch(scope, payload)
+      .patch(scope, { collapsed: payload })
       .subscribe({ error: () => null });
   }
 

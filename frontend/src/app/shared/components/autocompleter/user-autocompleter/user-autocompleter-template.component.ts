@@ -29,7 +29,9 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild, inject } from '@angular/core';
 import {
   IAutocompleterTemplateComponent,
+  OpAutocompleterComponent,
 } from 'core-app/shared/components/autocompleter/op-autocompleter/op-autocompleter.component';
+import { I18nService } from 'core-app/core/i18n/i18n.service';
 import { PathHelperService } from 'core-app/core/path-helper/path-helper.service';
 import { PrincipalLike } from 'core-app/shared/components/principal/principal-types';
 import { hrefFromPrincipal, typeFromHref } from 'core-app/shared/components/principal/principal-helper';
@@ -47,7 +49,27 @@ export class UserAutocompleterTemplateComponent implements IAutocompleterTemplat
   @Input() public isOpenedInModal = false;
   @Input() public hoverCards = true;
 
+  // Added to allow an "Unassign" action in the dropdown footer (see template)
+  @Input() public unassignable = false;
+
+  private readonly I18n = inject(I18nService);
+
+  private readonly autocompleter = inject(OpAutocompleterComponent);
+
+  text = {
+    unassign: this.I18n.t('js.label_unassign'),
+  };
+
+  // Added: unassigning behaves exactly like clearing the select (emits a null change)
+  public onUnassignClick($event:Event):void {
+    $event.stopPropagation();
+    this.autocompleter.closeSelect();
+    this.autocompleter.changed(null);
+  }
+
   @ViewChild('optionTemplate') optionTemplate:TemplateRef<Element>;
+  // Added to allow showing the avatar next to the selected principal (see template)
+  @ViewChild('labelTemplate') labelTemplate:TemplateRef<Element>;
   @ViewChild('footerTemplate') footerTemplate?:TemplateRef<Element>;
 
   public getHoverCardUrl(principal:PrincipalLike) {
