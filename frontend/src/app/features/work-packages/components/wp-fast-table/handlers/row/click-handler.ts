@@ -3,8 +3,7 @@ import { StateService } from '@uirouter/core';
 import { WorkPackageViewFocusService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-focus.service';
 import { States } from 'core-app/core/states/states.service';
 import { WorkPackageViewSelectionService } from 'core-app/features/work-packages/routing/wp-view-base/view-services/wp-view-selection.service';
-import { displayClassName } from 'core-app/shared/components/fields/display/display-field-renderer';
-import { activeFieldClassName } from 'core-app/shared/components/fields/edit/edit-form/edit-form';
+import { activeFieldClassName, activeFieldContainerClassName } from 'core-app/shared/components/fields/edit/edit-form/edit-form';
 import { LazyInject } from 'core-app/shared/helpers/angular/lazy-inject.decorator';
 import { debugLog } from 'core-app/shared/helpers/debug_output';
 import { TableEventComponent, TableEventHandler } from '../table-handler-registry';
@@ -47,10 +46,13 @@ export class RowClickHandler implements TableEventHandler {
       return true;
     }
 
-    // Shortcut to any clicks within a cell
-    // We don't want to handle these.
-    if (target.classList.contains(`${displayClassName}`) || target.classList.contains(`${activeFieldClassName}`)) {
-      debugLog('Skipping click on inner cell');
+    // Changed: clicks on a (editable) field now also select and focus the row, so the focus
+    // follows when editing a field in another row. Before, only clicks exactly on the field
+    // element were skipped, while clicks on its text, avatar or status dot were not - so
+    // whether the focus moved depended on where in the cell you clicked.
+    // Clicks inside a field that is already open for editing are still left alone.
+    if (target.closest(`.${activeFieldContainerClassName}`) || target.classList.contains(activeFieldClassName)) {
+      debugLog('Skipping click inside an active edit field');
       return true;
     }
 
